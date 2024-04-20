@@ -1,7 +1,5 @@
 import sys
 
-from PyQt5.QtCore import Qt
-
 from PyQt5.QtWidgets import (
     QApplication, 
     QWidget, 
@@ -9,13 +7,18 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, 
     QHBoxLayout, 
     QMainWindow, 
-    QLabel,
-    QFrame
+    QFrame,
 )
+
+import dashboard_window as dash_w
+import email_templates_window as email_w
+import format_tools_window as format_w
+import contact_window as cont_w
 
 class AgentDashboard(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('Agent Dashboard')
         self.initUI()
 
     def initUI(self):
@@ -25,10 +28,10 @@ class AgentDashboard(QMainWindow):
         bottom_layout = QVBoxLayout()
         horizontal_layout = QHBoxLayout()
 
-        self.dashboard_window = DashboardWindow(self)
-        self.email_templates_window = EmailTemplatesWindow(self)
-        self.format_tool_window = FormatToolWindow(self)
-        self.contact_window = ContactWindow(self)
+        self.dashboard_window = dash_w.DashboardWindow(self)
+        self.email_templates_window = email_w.EmailTemplatesWindow(self)
+        self.format_tool_window = format_w.FormatToolsWindow(self)
+        self.contact_window = cont_w.ContactWindow(self)
 
         self.swap_templates(self.dashboard_window)
 
@@ -73,67 +76,6 @@ class AgentDashboard(QMainWindow):
             old_widget.setParent(None)
         self.top_layout.addWidget(widget)
         widget.show()
-
-
-class DashboardWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.hide()
-
-    def showEvent(self, event):
-        self.window().setWindowTitle('Dashboard')
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().setParent(None)
-        self.welcome_label = QLabel("Welcome to the dashboard!", self)
-        self.welcome_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.welcome_label)
-
-class EmailTemplatesWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.hide()
-
-    def showEvent(self, event):
-        self.window().setWindowTitle('Email Templates')
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().setParent(None)
-        self.welcome_label = QLabel("Welcome to the your email templates!", self)
-        self.welcome_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.welcome_label)
-
-class FormatToolWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.hide()
-
-    def showEvent(self, event):
-        self.window().setWindowTitle('Format Tool')
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().setParent(None)
-        self.welcome_label = QLabel("Welcome to the format tool!", self)
-        self.welcome_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.welcome_label)
-
-class ContactWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.layout = QVBoxLayout()
-        self.setLayout(self.layout)
-        self.hide()
-
-    def showEvent(self, event):
-        self.window().setWindowTitle('Contact')
-        for i in reversed(range(self.layout.count())):
-            self.layout.itemAt(i).widget().setParent(None)
-        self.welcome_label = QLabel("Welcome to the contact page!", self)
-        self.welcome_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(self.welcome_label)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
