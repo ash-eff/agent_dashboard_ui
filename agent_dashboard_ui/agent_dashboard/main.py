@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (
 )
 
 import dashboard_window as dash_w
+import case_notes_window as case_w
 import email_templates_window as email_w
 import format_tools_window as format_w
 import contact_window as cont_w
@@ -22,13 +23,14 @@ class AgentDashboard(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.resize(0, 600)
+        self.resize(800, 600)
         outer_layout = QVBoxLayout()
         self.top_layout = QVBoxLayout()
         bottom_layout = QVBoxLayout()
         horizontal_layout = QHBoxLayout()
 
         self.dashboard_window = dash_w.DashboardWindow(self)
+        self.case_notes_window = case_w.CaseNotesWindow(self)
         self.email_templates_window = email_w.EmailTemplatesWindow(self)
         self.format_tool_window = format_w.FormatToolsWindow(self)
         self.contact_window = cont_w.ContactWindow(self)
@@ -38,6 +40,10 @@ class AgentDashboard(QMainWindow):
         self.dashboard_btn = QPushButton('Dashboard', self)
         self.dashboard_btn.setFixedSize(150, 50)
         self.dashboard_btn.clicked.connect(lambda: self.swap_templates(self.dashboard_window))
+
+        self.case_notes_bts = QPushButton('Case Notes', self)
+        self.case_notes_bts.setFixedSize(150, 50)
+        self.case_notes_bts.clicked.connect(lambda: self.swap_templates(self.case_notes_window))
 
         self.email_template_btn = QPushButton('Email Templates', self)
         self.email_template_btn.setFixedSize(150, 50)
@@ -56,6 +62,7 @@ class AgentDashboard(QMainWindow):
         line.setFrameShadow(QFrame.Sunken)
 
         horizontal_layout.addWidget(self.dashboard_btn)
+        horizontal_layout.addWidget(self.case_notes_bts)
         horizontal_layout.addWidget(self.email_template_btn)
         horizontal_layout.addWidget(self.format_btn)
         horizontal_layout.addWidget(self.contact_btn)
