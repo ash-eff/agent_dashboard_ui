@@ -16,6 +16,6 @@ class FormatToolsWindow(QWidget):
     def showEvent(self, event):
         for i in reversed(range(self.layout.count())):
             self.layout.itemAt(i).widget().setParent(None)
-        self.welcome_label = QLabel("Welcome to the format tool!", self)
+        self.welcome_label = QLabel("Formatting Tools", self)
         self.welcome_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.welcome_label)
