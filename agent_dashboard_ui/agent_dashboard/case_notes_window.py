@@ -167,7 +167,7 @@ class CaseNotesWindow(QWidget):
             new_note_added = True
 
         with open('notes.json', 'w') as file:
-            json.dump(existing_notes, file)
+            json.dump(existing_notes, file, indent=4)
 
         self.last_note_title = title
         if new_note_added:
@@ -225,7 +225,7 @@ class CaseNotesWindow(QWidget):
                 break
 
         with open('notes.json', 'w') as file:
-            json.dump(notes, file)
+            json.dump(notes, file, indent=4)
 
         self.load_note_buttons()
         self.open_blank_note()
