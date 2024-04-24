@@ -16,7 +16,9 @@ from PyQt5.QtWidgets import (
 
 from note import Note
 
-class CaseNotesWindow(QWidget):
+from helper_classes import ButtonSelectionMixin
+
+class CaseNotesWindow(QWidget, ButtonSelectionMixin):
     def __init__(self, dashboard, parent=None):
         super().__init__(parent)
         self.dashboard = dashboard
@@ -194,13 +196,14 @@ class CaseNotesWindow(QWidget):
                 button.clicked.connect(self.open_note_from_button)
                 self.left_layout.addWidget(button)
 
+        self.set_button_selected(button)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.left_layout.addWidget(spacer)
 
     def open_note_from_button(self):
         button = self.sender()
-
+        self.set_button_selected(button)
         with open('notes.json', 'r') as file:
             notes_dict = json.load(file)
         note_dict = next((note for note in notes_dict if note['title'] == button.note_title), None)

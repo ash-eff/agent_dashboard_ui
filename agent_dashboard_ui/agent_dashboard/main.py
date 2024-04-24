@@ -12,15 +12,18 @@ from PyQt5.QtWidgets import (
     QFrame,
 )
 
+from helper_classes import ButtonSelectionMixin
+
 import dashboard_window as dash_w
 import case_notes_window as case_w
 import email_templates_window as email_w
 import format_tools_window as format_w
 import contact_window as cont_w
 
-class AgentDashboard(QMainWindow):
+class AgentDashboard(QMainWindow, ButtonSelectionMixin):
     def __init__(self):
         super().__init__()
+        self.currently_selected_button = None
         self.initUI()
 
     def initUI(self):
@@ -47,6 +50,8 @@ class AgentDashboard(QMainWindow):
         self.dashboard_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.dashboard_btn.clicked.connect(lambda: self.swap_templates(self.dashboard_window, 'Agent Dashboard'))
         
+        self.set_button_selected(self.dashboard_btn)    
+
         self.case_notes_bts = QPushButton('Case Notes', self)
         self.case_notes_bts.setFont(QFont('Arial', self.btn_font_size))
         self.case_notes_bts.setFixedSize(self.btn_x_size, self.btn_y_size)
@@ -90,6 +95,7 @@ class AgentDashboard(QMainWindow):
         self.statusBar().showMessage(message, time)
 
     def swap_templates(self, widget, title):
+        self.set_button_selected(self.sender())
         for i in reversed(range(self.top_layout.count())):
             old_widget = self.top_layout.itemAt(i).widget()
             old_widget.hide()
