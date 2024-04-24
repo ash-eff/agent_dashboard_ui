@@ -24,7 +24,7 @@ class AgentDashboard(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.resize(1000, 800)
+        self.resize(1200, 900)
         self.btn_x_size = 150
         self.btn_y_size = 30
         self.btn_font_size = 14
@@ -85,6 +85,9 @@ class AgentDashboard(QMainWindow):
         central_widget = QWidget(self)
         central_widget.setLayout(outer_layout)
         self.setCentralWidget(central_widget)
+
+    def show_status(self, message, time):
+        self.statusBar().showMessage(message, time)
 
     def swap_templates(self, widget, title):
         for i in reversed(range(self.top_layout.count())):
