@@ -1,7 +1,5 @@
 import json
 
-from PyQt5.QtGui import QFont
-
 from PyQt5.QtWidgets import (
     QWidget, 
     QPushButton, 
@@ -21,11 +19,11 @@ from PyQt5.QtWidgets import (
 from helper_classes import ButtonSelectionMixin
 
 class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
-    def __init__(self, dashboard, parent=None):
+    def __init__(self, dashboard, user_setting, parent=None):
         super().__init__(parent)
+        self.user_settings = user_setting
+        self.email_templates_file = 'data/email_templates.json'
         self.dashboard = dashboard
-        self.btn_font_size = self.dashboard.btn_font_size
-        self.font_size = self.dashboard.font_size
         self.btn_x_size = 250
         self.btn_y_size = 75
         self.current_template = None
@@ -54,16 +52,12 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         # Set up widget properties
         self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.template_output.setReadOnly(True)
-        self.generate_btn.setFont(QFont('Arial', self.font_size))
         self.generate_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.generate_btn.hide()
-        self.copy_btn.setFont(QFont('Arial', self.font_size))
         self.copy_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.copy_btn.hide()
-        self.clear_fields_btn.setFont(QFont('Arial', self.font_size))
         self.clear_fields_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.clear_fields_btn.hide()
-        self.template_output.setFont(QFont('Arial', self.font_size))
 
         # Set up layouts
         self.main_layout.addLayout(self.outer_layout)
@@ -87,7 +81,6 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         if self.email_templates != {}:
             for template in self.email_templates:
                 template_btn = QPushButton(template.get('title'), self)
-                template_btn.setFont(QFont('Arial', self.btn_font_size))
                 template_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
 
                 template_btn.template_data = template
@@ -105,7 +98,7 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
     def get_email_templates(self):
         try:
-            with open('email_templates.json', 'r') as file:
+            with open(self.email_templates_file, 'r') as file:
                 email_templates = json.load(file)
         except FileNotFoundError:
             email_templates = {}
@@ -127,16 +120,13 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         for option in template_data['options']:
             label = QLabel(option['name'])
-            label.setFont(QFont('Arial', self.font_size))
 
             if option['type'] == 'dropdown':
                 dropdown = QComboBox()
                 dropdown.addItems(option['values'])
-                dropdown.setFont(QFont('Arial', self.font_size))
                 self.options_field.addRow(label,dropdown)
             elif option['type'] == 'input':
                 input_field = QLineEdit()
-                input_field.setFont(QFont('Arial', self.font_size))
                 self.options_field.addRow(label, input_field)
         
         self.generate_btn.show()
@@ -167,9 +157,11 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
             values[label] = value
 
         template_text = template_text.format(**values)
-        signature_text = self.current_template['signature']
+        settings = self.user_settings.get_settings()
+        user_name = settings['username']
+        signature_text = settings['user_signature']
 
-        self.template_output.setPlainText(template_text + signature_text)
+        self.template_output.setPlainText(template_text + user_name + '\n' + signature_text)
 
     def copy_template(self):
         if self.template_output.toPlainText() == '':

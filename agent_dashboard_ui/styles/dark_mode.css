@@ -1,0 +1,30 @@
+QWidget {
+    background-color: #2b2b2b;
+    color: #b1b1b1;
+}
+QPushButton {
+    background-color: #3a3a3a;
+    color: #b1b1b1;
+    font: 18px Arial;
+}
+QPushButton.selected {
+    background-color: #254a5a;
+}
+QPushButton.warning {
+    background-color: #ff0000 !important;
+}
+QLabel {
+    font: 16px Arial;
+}
+QFont {
+    font: 18px Arial;
+}
+QTextEdit {
+    font: 16px Arial;
+}
+QLineEdit {
+    font: 16px Arial;
+}
+QComboBox{
+    font: 16px Arial;
+}

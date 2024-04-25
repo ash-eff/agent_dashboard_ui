@@ -1,8 +1,6 @@
 import json
 import os
 
-from PyQt5.QtGui import QFont
-
 from PyQt5.QtWidgets import (
     QWidget, 
     QVBoxLayout, 
@@ -21,9 +19,8 @@ from helper_classes import ButtonSelectionMixin
 class CaseNotesWindow(QWidget, ButtonSelectionMixin):
     def __init__(self, dashboard, parent=None):
         super().__init__(parent)
+        self.case_file = 'data/notes.json'
         self.dashboard = dashboard
-        self.btn_font_size = self.dashboard.btn_font_size
-        self.font_size = self.dashboard.font_size
         self.last_note_title = ''
         self.original_note_title = ''
         self.initUI()
@@ -47,15 +44,11 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         # Set up widget properties
         self.case_btn_scroll.setWidgetResizable(True)
         self.case_btn_scroll.setFixedWidth(180)
-        self.new_note_btn.setFont(QFont('Arial', self.btn_font_size))
         self.new_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
-        self.save_note_btn.setFont(QFont('Arial', self.btn_font_size))
         self.save_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
-        self.delete_note_btn.setFont(QFont('Arial', self.btn_font_size))
-        self.delete_note_btn.setStyleSheet('QPushButton {color: black; background-color: red;}')
+        self.delete_note_btn.setObjectName('warning')
         self.delete_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
         self.case_notes.setPlaceholderText('Case Notes')
-        self.case_notes.setFont(QFont('Arial', self.font_size))
 
         # Set up layouts
         self.case_btn_container.setLayout(self.left_layout)
@@ -114,7 +107,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
     def load_last_note(self):
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     notes_dict = json.load(file)
                 except json.JSONDecodeError:
@@ -146,7 +139,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         note_dict = note.to_dict()
 
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     existing_notes = json.load(file)
                 except json.JSONDecodeError:
@@ -164,7 +157,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             existing_notes.append(note_dict)
             new_note_added = True
 
-        with open('notes.json', 'w') as file:
+        with open(self.case_file, 'w') as file:
             json.dump(existing_notes, file, indent=4)
 
         self.last_note_title = note_dict['title']
@@ -180,8 +173,8 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
                 widget.setParent(None)
 
         try:
-            with open('notes.json', 'r') as file:
-                if os.stat('notes.json').st_size != 0:
+            with open(self.case_file, 'r') as file:
+                if os.stat(self.case_file).st_size != 0:
                     notes_dict = json.load(file)
                 else:
                     notes_dict = []
@@ -194,7 +187,6 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             if note.title:
                 button = QPushButton(note.title)
                 button.setFixedSize(150, 50)
-                button.setFont(QFont('Arial', self.btn_font_size))
                 button.note_title = note.title
                 button.clicked.connect(self.open_note_from_button)
                 self.left_layout.addWidget(button)
@@ -206,7 +198,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
     def open_note_from_button(self):
         button = self.sender()
         self.set_button_selected(button)
-        with open('notes.json', 'r') as file:
+        with open(self.case_file, 'r') as file:
             notes_dict = json.load(file)
         note_dict = next((note for note in notes_dict if note['title'] == button.note_title), None)
 
@@ -224,7 +216,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             return
 
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     notes_dict = json.load(file)
                 except json.JSONDecodeError:
@@ -241,7 +233,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
         notes_dict = [note.to_dict() for note in notes]
 
-        with open('notes.json', 'w') as file:
+        with open(self.case_file, 'w') as file:
             json.dump(notes_dict, file, indent=4)
 
         self.load_note_buttons()
