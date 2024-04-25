@@ -83,6 +83,9 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
         self.load_note_buttons()
         self.load_last_note()
+        button = self.get_button_from_title(self.last_note_title)
+        if button is not None:
+            self.set_button_selected(button)
 
     def hideEvent(self, event):
         super().hideEvent(event)
@@ -196,7 +199,6 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
                 button.clicked.connect(self.open_note_from_button)
                 self.left_layout.addWidget(button)
 
-        self.set_button_selected(button)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.left_layout.addWidget(spacer)
@@ -244,3 +246,9 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
         self.load_note_buttons()
         self.open_blank_note()
+
+    def get_button_from_title(self, title):
+        for widget in self.findChildren(QPushButton):
+            if widget is not None and widget.text() == title:
+                return widget
+        return None
