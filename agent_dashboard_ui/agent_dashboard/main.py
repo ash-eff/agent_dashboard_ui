@@ -1,5 +1,6 @@
 import sys
 
+from PyQt5.QtGui import QShowEvent
 from PyQt5.QtWidgets import (
     QApplication, 
     QWidget, 
@@ -37,19 +38,15 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         button_layout = QHBoxLayout()
         horizontal_layout = QHBoxLayout()
 
-        self.dashboard_window = dash_w.DashboardWindow(self.user_settings)
+        self.dashboard_window = dash_w.DashboardWindow(self, self.user_settings)
         self.case_notes_window = case_w.CaseNotesWindow(self)
         self.email_templates_window = email_w.EmailTemplatesWindow(self, self.user_settings)
         self.format_tool_window = format_w.FormatToolsWindow(self)
         self.contact_window = cont_w.ContactWindow(self)
 
-        self.swap_templates(self.dashboard_window, 'Agent Dashboard')
-
         self.dashboard_btn = QPushButton('Dashboard', self)
         self.dashboard_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
-        self.dashboard_btn.clicked.connect(lambda: self.swap_templates(self.dashboard_window, 'Agent Dashboard'))
-        
-        self.set_button_selected(self.dashboard_btn)    
+        self.dashboard_btn.clicked.connect(lambda: self.swap_templates(self.dashboard_window, 'Agent Dashboard')) 
 
         self.case_notes_bts = QPushButton('Case Notes', self)
         self.case_notes_bts.setFixedSize(self.btn_x_size, self.btn_y_size)
@@ -87,6 +84,11 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.setCentralWidget(central_widget)
         self.apply_style_settings()
 
+    def showEvent(self, event):
+        self.swap_templates(self.dashboard_window, 'Agent Dashboard')
+        self.set_button_selected(self.dashboard_btn)   
+
+
     def show_status(self, message, time):
         self.statusBar().showMessage(message, time)
 
@@ -108,7 +110,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
     
     def apply_style_settings(self):
         settings = self.user_settings.settings
-        if  settings['dark_mode']:
+        if settings['dark_mode']:
             QApplication.instance().setStyleSheet(self.dark_mode_stylesheet)
         else:
             QApplication.instance().setStyleSheet(self.light_mode_stylesheet)

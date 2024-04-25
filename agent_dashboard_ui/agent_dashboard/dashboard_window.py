@@ -17,12 +17,15 @@ from PyQt5.QtWidgets import (
 
 from datetime import datetime
 
+from user_settings_window import SettingsWindow
+
 class DashboardWindow(QWidget):
-    def __init__(self, user_settings, parent=None):
+    def __init__(self, dashboard, user_settings, parent=None):
         super().__init__(parent)
         self.user_settings = user_settings
+        self.dashboard = dashboard
         self.initUI()
-        #self.hide()
+        self.hide()
 
     def initUI(self):
         # Create all widgets
@@ -97,7 +100,7 @@ class DashboardWindow(QWidget):
 
         # Connect signals
         self.timer.timeout.connect(self.update_time)
-        #self.settings_button.clicked.connect(self.open_settings)
+        self.settings_button.clicked.connect(self.open_settings)
 
         self.timer.start(1000)
 
@@ -125,7 +128,8 @@ class DashboardWindow(QWidget):
         self.texas_time.setText(texas_time)
     
     def open_settings(self):
-        self.user_settings.show()
+        self.settings_window = SettingsWindow(self.dashboard, self.user_settings, self.dashboard.dark_mode_stylesheet, self.dashboard.light_mode_stylesheet)
+        self.settings_window.show()
 
     def create_line(self):
         line = QFrame()

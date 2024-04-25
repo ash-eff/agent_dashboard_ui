@@ -19,7 +19,7 @@ class SettingsWindow(QWidget):
         print("hello from settings window")
         self.setMinimumSize(500, 500)
         self.initUI()
-        self.hide()
+        #self.hide()
 
 
     def initUI(self):
@@ -46,7 +46,7 @@ class SettingsWindow(QWidget):
         self.save_settings_btn.clicked.connect(self.save_settings)
 
     def showEvent(self, event):
-        settings = self.user_settings
+        settings = self.user_settings.get_settings()
 
         for option in settings['time_zone_options']:
             self.user_time_zone.addItem(option)

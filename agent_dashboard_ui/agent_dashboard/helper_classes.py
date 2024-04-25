@@ -27,6 +27,10 @@ class UserSettings:
         current_settings.update(new_settings)
         with open(self.settings_file, 'w') as file:
             json.dump(current_settings, file, indent=4)
+        self.settings = current_settings
+
+    def get_settings(self):
+        return self.settings
 
     def get_setting(self, setting_name):
         return self.settings.get(setting_name)
