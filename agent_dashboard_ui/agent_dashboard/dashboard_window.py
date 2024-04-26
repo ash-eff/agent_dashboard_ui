@@ -1,3 +1,6 @@
+import json
+import webbrowser
+
 from pytz import timezone
 
 from PyQt5.QtCore import QTimer
@@ -9,20 +12,23 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QHBoxLayout,
     QLineEdit,
-    QTextEdit,
+    QListWidget,
+    QListWidgetItem,
     QSizePolicy,
     QGroupBox,
-    QFrame
 )
 
 from datetime import datetime
 
 from user_settings_window import SettingsWindow
 
+from helper_classes import UIComponents as uic
+
 class DashboardWindow(QWidget):
     def __init__(self, dashboard, user_settings, parent=None):
         super().__init__(parent)
         self.user_settings = user_settings
+        self.links_file = 'data/links.json'
         self.dashboard = dashboard
         self.initUI()
         self.hide()
@@ -49,7 +55,7 @@ class DashboardWindow(QWidget):
         self.spacer = QWidget()
         self.settings_button = QPushButton('Settings', self)
         self.link_label = QLabel('Important Links:', self)
-        self.links = QTextEdit(self)
+        self.links = QListWidget(self)
         self.add_link_name_label = QLabel('Link Name:', self)
         self.add_link_name = QLineEdit(self)
         self.add_link_url_label = QLabel('Link URL:', self)
@@ -78,16 +84,16 @@ class DashboardWindow(QWidget):
         self.title_layout.addStretch(1)
         self.lower_layout.addWidget(self.left_group)
         self.lower_layout.addWidget(self.right_group)
-        self.left_layout.addWidget(self.create_line())
+        self.left_layout.addWidget(uic.create_line(self))
         self.left_layout.addWidget(self.cai_time_label)
         self.left_layout.addWidget(self.cai_time)
-        self.left_layout.addWidget(self.create_line())
+        self.left_layout.addWidget(uic.create_line(self))
         self.left_layout.addWidget(self.your_time_label)
         self.left_layout.addWidget(self.your_time)
-        self.left_layout.addWidget(self.create_line())
+        self.left_layout.addWidget(uic.create_line(self))
         self.left_layout.addWidget(self.texas_time_label)
         self.left_layout.addWidget(self.texas_time)
-        self.left_layout.addWidget(self.create_line())
+        self.left_layout.addWidget(uic.create_line(self))
         self.left_layout.addWidget(self.spacer)
         self.left_layout.addWidget(self.settings_button)
         self.right_layout.addWidget(self.link_label)
@@ -100,12 +106,14 @@ class DashboardWindow(QWidget):
 
         # Connect signals
         self.timer.timeout.connect(self.update_time)
+        self.add_link_btn.clicked.connect(self.add_link)
         self.settings_button.clicked.connect(self.open_settings)
 
         self.timer.start(1000)
 
     def showEvent(self, event):
         self.update_time()  
+        self.load_links()
 
     def update_time(self):
         format = '%I:%M:%S %p'
@@ -127,12 +135,52 @@ class DashboardWindow(QWidget):
         self.cai_time.setText(cai_time)
         self.texas_time.setText(texas_time)
     
+    def add_link(self):
+        link_name = self.add_link_name.text()
+        link_url = self.add_link_url.text()
+        if link_name and link_url:
+            new_link = {
+                'link_name': link_name,
+                'link_url': link_url
+            }
+
+            with open(self.links_file, 'r') as file:
+                try:
+                    link = json.load(file)
+                except json.JSONDecodeError:
+                    link = []
+
+            link.append(new_link)
+
+            with open(self.links_file, 'w') as file:
+                json.dump(link, file, indent=4)
+
+            self.links.addItem(QListWidgetItem(link_name))
+
+    def load_links(self):
+        self.links.clear()
+        try:
+            with open(self.links_file, 'r') as file:
+                links = json.load(file)
+                for link in links:
+                    self.links.addItem(QListWidgetItem(link['link_name']))
+            
+            self.links.itemClicked.connect(self.open_link)
+
+        except (FileNotFoundError, json.JSONDecodeError):
+            default_links = []
+            with open(self.links_file, 'w') as file:
+                json.dump(default_links, file, indent=4)
+
+    def open_link(self, item):
+        link_name = item.text()
+        with open(self.links_file, 'r') as file:
+            links = json.load(file)
+            for link in links:
+                if link['link_name'] == link_name:
+                    webbrowser.open_new_tab(link['link_url'])
+                    break
+
     def open_settings(self):
         self.settings_window = SettingsWindow(self.dashboard, self.user_settings, self.dashboard.dark_mode_stylesheet, self.dashboard.light_mode_stylesheet)
         self.settings_window.show()
-
-    def create_line(self):
-        line = QFrame()
-        line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        return line

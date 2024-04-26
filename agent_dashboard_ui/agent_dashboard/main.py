@@ -1,6 +1,5 @@
 import sys
 
-from PyQt5.QtGui import QShowEvent
 from PyQt5.QtWidgets import (
     QApplication, 
     QWidget, 
@@ -88,7 +87,6 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.swap_templates(self.dashboard_window, 'Agent Dashboard')
         self.set_button_selected(self.dashboard_btn)   
 
-
     def show_status(self, message, time):
         self.statusBar().showMessage(message, time)
 
@@ -117,7 +115,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-
+    app.setStyle('Fusion')
     ex = AgentDashboard()
     ex.show()
     sys.exit(app.exec_())

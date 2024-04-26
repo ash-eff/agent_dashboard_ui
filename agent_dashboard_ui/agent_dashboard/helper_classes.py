@@ -1,4 +1,6 @@
 import json
+import os
+from PyQt5.QtWidgets import QFrame
 
 class ButtonSelectionMixin:
     def __init__(self):
@@ -16,8 +18,23 @@ class ButtonSelectionMixin:
 class UserSettings:
     def __init__(self, settings_file='data/user_settings.json'):
         self.settings_file = settings_file
+        if not os.path.isfile(self.settings_file) or os.path.getsize(self.settings_file) == 0:
+            default_settings = {
+                "username": "",
+                "user_time_zone": "Eastern Standard Time",
+                "user_signature": "",
+                "dark_mode": False,
+                "time_zone_options": [
+                    "Eastern Standard Time",
+                    "Central Standard Time",
+                    "Pacific Standard Time",
+                    "Mountain Standard Time"
+                ],
+            }
+            with open(self.settings_file, 'w') as file:
+                json.dump(default_settings, file, indent=4)
         self.settings = self.load_settings()
-
+        
     def load_settings(self):
         with open(self.settings_file, 'r') as file:
             return json.load(file)
@@ -48,3 +65,10 @@ class UserSettings:
         }
 
         return TIMEZONE_MAPPING[self.settings['user_time_zone']]
+    
+class UIComponents:
+    def create_line(self):
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        return line

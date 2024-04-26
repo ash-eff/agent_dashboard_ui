@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QScrollArea,
     QSizePolicy,
+    QGroupBox
 )
 
 from note import Note
@@ -30,11 +31,13 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         # Create all widgets
         self.main_layout = QVBoxLayout()
         self.outer_layout = QHBoxLayout()
-        self.upper_layout = QVBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
-        self.case_btn_container = QWidget()
-        self.case_btn_scroll = QScrollArea()
+        self.scroll_area = QScrollArea(self)
+        self.scroll_layout = QVBoxLayout()
+        self.left_side_group = QGroupBox()
+        self.right_side_group = QGroupBox()
+        self.scroll_widget = QWidget()
         self.bottom_button_layout = QHBoxLayout()
         self.new_note_btn = QPushButton('New Note', self)      
         self.save_note_btn = QPushButton('Save Note', self)
@@ -42,29 +45,35 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.case_notes = QTextEdit(self)
 
         # Set up widget properties
-        self.case_btn_scroll.setWidgetResizable(True)
-        self.case_btn_scroll.setFixedWidth(180)
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setFixedWidth(190)
         self.new_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
         self.save_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
         self.delete_note_btn.setObjectName('warning')
         self.delete_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
         self.case_notes.setPlaceholderText('Case Notes')
+        self.left_side_group.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+
+        self.outer_layout.setStretch(0,1)
+        self.outer_layout.setStretch(1,3)
 
         # Set up layouts
-        self.case_btn_container.setLayout(self.left_layout)
-        self.case_btn_scroll.setWidget(self.case_btn_container) 
-        self.outer_layout.addWidget(self.case_btn_scroll)
-        self.outer_layout.addLayout(self.right_layout)
-        self.outer_layout.addLayout(self.upper_layout)
         self.main_layout.addLayout(self.outer_layout)
         self.main_layout.addLayout(self.bottom_button_layout)
+        self.left_side_group.setLayout(self.left_layout)
+        self.right_side_group.setLayout(self.right_layout)
+        self.scroll_widget.setLayout(self.scroll_layout)
+        self.scroll_area.setWidget(self.scroll_widget)
         self.setLayout(self.main_layout)
 
         # Add widgets to layouts
         self.right_layout.addWidget(self.case_notes)
+        self.left_layout.addWidget(self.scroll_area)
         self.bottom_button_layout.addWidget(self.new_note_btn)
         self.bottom_button_layout.addWidget(self.save_note_btn)
         self.bottom_button_layout.addWidget(self.delete_note_btn)
+        self.outer_layout.addWidget(self.left_side_group)
+        self.outer_layout.addWidget(self.right_side_group)
 
         #connect signals
         self.new_note_btn.clicked.connect(self.open_blank_note)
@@ -72,8 +81,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.delete_note_btn.clicked.connect(self.delete_note)
 
     def showEvent(self, event):
-        self.clear_layout(self.left_layout) 
-
+        self.clear_layout(self.scroll_layout) 
         self.load_note_buttons()
         self.load_last_note()
         button = self.get_button_from_title(self.last_note_title)
@@ -167,8 +175,9 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             self.load_note_buttons()
 
     def load_note_buttons(self):
-        for i in reversed(range(self.left_layout.count())):
-            widget = self.left_layout.itemAt(i).widget()
+        button = None
+        for i in reversed(range(self.scroll_layout.count())):
+            widget = self.scroll_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
@@ -189,13 +198,16 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
                 button.setFixedSize(150, 50)
                 button.note_title = note.title
                 button.clicked.connect(self.open_note_from_button)
-                self.left_layout.addWidget(button)
+                self.scroll_layout.addWidget(button)
 
+        if button is not None:
+            self.set_button_selected(button)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.left_layout.addWidget(spacer)
+        self.scroll_layout.addWidget(spacer)
 
     def open_note_from_button(self):
+        self.save_note()
         button = self.sender()
         self.set_button_selected(button)
         with open(self.case_file, 'r') as file:

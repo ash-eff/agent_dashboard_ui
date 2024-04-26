@@ -7,13 +7,14 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QTextEdit,
     QLabel,
-    QSizePolicy,
     QComboBox,
     QLineEdit,
     QFormLayout,
     QGroupBox,
     QMessageBox,
-    QApplication
+    QApplication,
+    QSizePolicy,
+    QScrollArea
 )
 
 from helper_classes import ButtonSelectionMixin
@@ -37,20 +38,21 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         self.outer_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
+        self.scroll_area = QScrollArea(self)
+        self.scroll_layout = QVBoxLayout()
         self.upper_right_side_layout = QHBoxLayout()
         self.lower_right_side_layout = QHBoxLayout()
-        self.spacer = QWidget()
+        self.scroll_widget = QWidget()
         self.options_field = QFormLayout()
         self.template_output = QTextEdit(self)
-        self.spacer = QWidget()
         self.right_side_group = QGroupBox()
+        self.left_side_group = QGroupBox()
         self.button_holder_layout = QHBoxLayout()
         self.generate_btn = QPushButton('Generate Email', self)
         self.copy_btn = QPushButton('Copy Email', self)
         self.clear_fields_btn = QPushButton('Clear Fields', self)
 
         # Set up widget properties
-        self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.template_output.setReadOnly(True)
         self.generate_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.generate_btn.hide()
@@ -58,23 +60,27 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         self.copy_btn.hide()
         self.clear_fields_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.clear_fields_btn.hide()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setFixedWidth(300)
 
         # Set up layouts
         self.main_layout.addLayout(self.outer_layout)
-        self.outer_layout.addLayout(self.left_layout)
         self.right_layout.addLayout(self.upper_right_side_layout)
         self.right_layout.addLayout(self.button_holder_layout)
         self.right_layout.addLayout(self.lower_right_side_layout)
         self.upper_right_side_layout.addLayout(self.options_field)
+        self.left_side_group.setLayout(self.left_layout)
         self.right_side_group.setLayout(self.right_layout)
+        self.scroll_widget.setLayout(self.scroll_layout)
+        self.scroll_area.setWidget(self.scroll_widget)
         self.setLayout(self.main_layout)
-
 
         # Add widgets to layouts
         self.button_holder_layout.addWidget(self.generate_btn)
         self.button_holder_layout.addWidget(self.copy_btn)
         self.button_holder_layout.addWidget(self.clear_fields_btn)
         self.lower_right_side_layout.addWidget(self.template_output)
+        self.outer_layout.addWidget(self.left_side_group)
         self.outer_layout.addWidget(self.right_side_group)
 
         self.email_templates = self.get_email_templates()
@@ -87,9 +93,15 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
                 template_btn.clicked.connect(self.on_template_btn_clicked)
 
-                self.left_layout.addWidget(template_btn)
+                self.scroll_layout.addWidget(template_btn)
 
-        self.left_layout.addWidget(self.spacer)
+            self.left_layout.addWidget(self.scroll_area)
+            spacer = QWidget()
+            spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.scroll_layout.addWidget(spacer)
+
+        self.outer_layout.setStretch(0,1)
+        self.outer_layout.setStretch(1,3)
 
         #connect signals
         self.generate_btn.clicked.connect(self.populate_email_from_template)
@@ -158,10 +170,9 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         template_text = template_text.format(**values)
         settings = self.user_settings.get_settings()
-        user_name = settings['username']
         signature_text = settings['user_signature']
 
-        self.template_output.setPlainText(template_text + user_name + '\n' + signature_text)
+        self.template_output.setPlainText(template_text + signature_text)
 
     def copy_template(self):
         if self.template_output.toPlainText() == '':
