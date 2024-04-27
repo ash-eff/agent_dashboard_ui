@@ -2,6 +2,10 @@ QWidget {
     background-color: #2b2b2b;
     color: #b1b1b1;
 }
+QWidget#link_widget {
+    border: 2px solid #b1b1b1;
+    border-radius: 5px;
+}
 QWidget:item:selected
 {
      background-color:  #254a5a;
@@ -34,6 +38,9 @@ QPushButton.warning {
 QLabel {
     font: 16px Arial;
 }
+QLabel#link_label {
+    font: 20px Arial;
+}
 QFont {
     font: 18px Arial;
 }
@@ -51,6 +58,7 @@ QCheckBox {
 }
 QListWidget {
     font: 30px Arial;
+    padding: 10px;
 }
 QScrollBar:vertical {
     background: #2b2b2b;
@@ -85,7 +93,6 @@ QScrollBar::handle:horizontal {
 }
 QScrollArea {
     border: none
-
 }
 *:focus {
     border: 2px solid #b1b1b1;

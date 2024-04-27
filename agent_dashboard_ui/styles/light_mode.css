@@ -2,6 +2,10 @@ QWidget {
     background-color: #f0f0f0;
     color: #000000;
 }
+QWidget#link_widget {
+    border: 2px solid #bebebe;
+    border-radius: 5px;
+}
 QWidget:item:selected {
     background-color: #90EE90;
 }
@@ -32,6 +36,9 @@ QPushButton.warning {
 }
 QLabel {
     font: 16px Arial;
+}
+QLabel#link_label {
+    font: 20px Arial;
 }
 QFont {
     font: 18px Arial;

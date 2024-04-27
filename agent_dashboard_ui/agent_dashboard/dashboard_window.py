@@ -1,5 +1,6 @@
 import json
-import webbrowser
+from PyQt5.QtCore import QUrl, QSize, Qt
+from PyQt5.QtGui import QDesktopServices
 
 from pytz import timezone
 
@@ -68,6 +69,7 @@ class DashboardWindow(QWidget):
         self.cai_time_label.setText('CAI Time:')
         self.texas_time_label.setText('Texas Time:')
         self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.links.setFocusPolicy(Qt.NoFocus)
 
         # Set up layouts
         self.main_layout.addLayout(self.upper_layout)
@@ -108,6 +110,7 @@ class DashboardWindow(QWidget):
         self.timer.timeout.connect(self.update_time)
         self.add_link_btn.clicked.connect(self.add_link)
         self.settings_button.clicked.connect(self.open_settings)
+        self.links.itemClicked.connect(self.open_link)
 
         self.timer.start(1000)
 
@@ -155,7 +158,7 @@ class DashboardWindow(QWidget):
             with open(self.links_file, 'w') as file:
                 json.dump(link, file, indent=4)
 
-            self.links.addItem(QListWidgetItem(link_name))
+        self.load_links()
 
     def load_links(self):
         self.links.clear()
@@ -163,10 +166,30 @@ class DashboardWindow(QWidget):
             with open(self.links_file, 'r') as file:
                 links = json.load(file)
                 for link in links:
-                    self.links.addItem(QListWidgetItem(link['link_name']))
+                    item_layout = QHBoxLayout()
+                    link_label = QLabel(link['link_name'])
+                    link_label.setObjectName('link_label')
+                    link_label.setEnabled(False)
+                    item_layout.addWidget(link_label)
+                    edit_button = QPushButton('Edit')
+                    edit_button.setFixedWidth(80)
+                    edit_button.setFixedHeight(80)
+                    edit_button.clicked.connect(lambda: self.edit_link(link['link_name']))
+                    item_layout.addWidget(edit_button)
+                    delete_button = QPushButton('Delete')
+                    delete_button.setFixedWidth(80)
+                    delete_button.setFixedHeight(80)
+                    delete_button.clicked.connect(lambda: self.delete_link(link['link_name']))
+                    item_layout.addWidget(delete_button)
+                    widget = QWidget()
+                    widget.setObjectName('link_widget')
+                    widget.setLayout(item_layout)
+                    widget.setMinimumSize(QSize(widget.width(), 100))
+                    item = QListWidgetItem(link['link_name'])
+                    item.setSizeHint(widget.sizeHint())
+                    self.links.addItem(item)
+                    self.links.setItemWidget(item, widget)
             
-            self.links.itemClicked.connect(self.open_link)
-
         except (FileNotFoundError, json.JSONDecodeError):
             default_links = []
             with open(self.links_file, 'w') as file:
@@ -178,7 +201,10 @@ class DashboardWindow(QWidget):
             links = json.load(file)
             for link in links:
                 if link['link_name'] == link_name:
-                    webbrowser.open_new_tab(link['link_url'])
+                    url = link['link_url']
+                    if not url.startswith('http://') and not url.startswith('https://'):
+                        url = 'http://' + url
+                    QDesktopServices.openUrl(QUrl(url))
                     break
 
     def open_settings(self):
