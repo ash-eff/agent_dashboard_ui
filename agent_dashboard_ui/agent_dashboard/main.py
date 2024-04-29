@@ -148,10 +148,9 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         if getattr(sys, 'frozen', False):
             exe_path = os.path.dirname(sys.executable)
             base_path = os.path.dirname(exe_path)
-            return os.path.join(base_path, relative_path)
         else:
-            base_path = os.path.abspath(".")
-            return os.path.join(base_path, 'agent_dashboard', relative_path)
+            base_path = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(base_path, relative_path)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
