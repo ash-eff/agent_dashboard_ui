@@ -41,25 +41,14 @@ class FormatToolsWindow(QWidget):
         self.left_side_group = QGroupBox()
         self.button_holder_layout = QVBoxLayout()
         self.spacer = QWidget()
-
         self.district_btn = QPushButton('District by Email', self)
-        self.email_input = QLineEdit(self)
-        self.get_district_btn = QPushButton('Get District', self)
-        self.district_output = QLabel('', self)
-        self.district_irn_label = QLabel('', self)
-
         self.format_user_btn = QPushButton('Format User Information', self)
-        self.user_information_input = QTextEdit(self)
-        self.user_information_output = QTextEdit(self)
-        self.format_btn = QPushButton('Format', self)
-        self.copy_btn = QPushButton('Copy', self)
 
         # Set up widget properties
         self.district_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.format_user_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.right_side_group.setStyleSheet("QGroupBox { padding: 10px; }")
-        self.user_information_output.setReadOnly(True)
 
         # Set up layouts
         self.main_layout.addLayout(self.outer_layout)
@@ -81,16 +70,19 @@ class FormatToolsWindow(QWidget):
 
         #connect signals
         self.district_btn.clicked.connect(self.show_district_by_email_widget)
-        self.get_district_btn.clicked.connect(self.fetch_district)
         self.format_user_btn.clicked.connect(self.show_customer_information_widget)
-        self.format_btn.clicked.connect(self.format_customer_information)
-        self.copy_btn.clicked.connect(self.copy_user_information)
+
 
     def show_district_by_email_widget(self):
         self.clear_layout(self.right_layout)
+        self.email_input = QLineEdit(self)
+        self.get_district_btn = QPushButton('Get District', self)
+        self.district_output = QLabel('', self)
+        self.district_irn_label = QLabel('', self)
         self.email_input.clear()
         self.district_output.clear()
         self.district_irn_label.clear()
+        self.get_district_btn.clicked.connect(self.fetch_district)
 
         form_layout = QFormLayout()
         form_output_layout = QFormLayout()
@@ -121,8 +113,15 @@ class FormatToolsWindow(QWidget):
 
     def show_customer_information_widget(self):
         self.clear_layout(self.right_layout)
+        self.user_information_input = QTextEdit(self)
+        self.user_information_output = QTextEdit(self)
+        self.user_information_output.setReadOnly(True)
+        self.format_btn = QPushButton('Format', self)
+        self.copy_btn = QPushButton('Copy', self)
         self.user_information_input.clear()
         self.user_information_output.clear()
+        self.format_btn.clicked.connect(self.format_customer_information)
+        self.copy_btn.clicked.connect(self.copy_user_information)
 
         form_layout = QVBoxLayout()
         form_output_layout = QVBoxLayout()
