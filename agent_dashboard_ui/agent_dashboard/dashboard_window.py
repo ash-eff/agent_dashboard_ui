@@ -28,11 +28,11 @@ from user_settings_window import SettingsWindow
 from helper_classes import UIComponents as uic
 
 class DashboardWindow(QWidget):
-    def __init__(self, dashboard, user_settings, parent=None):
+    def __init__(self, main, user_settings, parent=None):
         super().__init__(parent)
         self.user_settings = user_settings
-        self.links_file = 'data/links.json'
-        self.dashboard = dashboard
+        self.links_file = main.resource_path('data/links.json')
+        self.main = main
         self.initUI()
         self.hide()
 
@@ -70,8 +70,8 @@ class DashboardWindow(QWidget):
         self.texas_time_label.setText('Texas Time:')
         self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.links.setFocusPolicy(Qt.NoFocus)
-        self.settings_button.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size * 2)
-        self.add_link_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size * 2)
+        self.settings_button.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size * 2)
+        self.add_link_btn.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size * 2)
 
         # Set up layouts
         self.main_layout.addLayout(self.upper_layout)
@@ -199,7 +199,7 @@ class DashboardWindow(QWidget):
                     break
 
     def open_settings(self):
-        self.settings_window = SettingsWindow(self.dashboard, self.user_settings, self.dashboard.dark_mode_stylesheet, self.dashboard.light_mode_stylesheet)
+        self.settings_window = SettingsWindow(self.main, self.user_settings, self.main.dark_mode_stylesheet, self.main.light_mode_stylesheet)
         self.settings_window.show()
 
     def apply_user_settings(self):

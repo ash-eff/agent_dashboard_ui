@@ -9,11 +9,13 @@ from PyQt5.QtWidgets import (
     QMessageBox
 )
 
+from main import AgentDashboard
+
 class LinkWindow(QDialog):
     def __init__(self, mode, link_name, parent=None):
         super(LinkWindow, self).__init__(parent)
         self.dashboard = self.parent()
-        self.links_file = 'data/links.json'
+        self.links_file = AgentDashboard.resource_path('data/links.json')
         self.working_link_name = link_name
         self.mode = mode
         self.link_name_label = QLabel('Link Name:')

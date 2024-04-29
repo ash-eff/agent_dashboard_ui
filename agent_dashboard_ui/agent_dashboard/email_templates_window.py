@@ -20,11 +20,11 @@ from PyQt5.QtWidgets import (
 from helper_classes import ButtonSelectionMixin
 
 class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
-    def __init__(self, dashboard, user_setting, parent=None):
+    def __init__(self, main, user_setting, parent=None):
         super().__init__(parent)
         self.user_settings = user_setting
-        self.email_templates_file = 'data/email_templates.json'
-        self.dashboard = dashboard
+        self.email_templates_file = main.resource_path('data/email_templates.json')
+        self.main = main
         self.btn_x_size = 250
         self.btn_y_size = 75
         self.current_template = None
@@ -54,11 +54,11 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         # Set up widget properties
         self.template_output.setReadOnly(True)
-        self.generate_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
+        self.generate_btn.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size)
         self.generate_btn.hide()
-        self.copy_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
+        self.copy_btn.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size)
         self.copy_btn.hide()
-        self.clear_fields_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
+        self.clear_fields_btn.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size)
         self.clear_fields_btn.hide()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setFixedWidth(300)
@@ -176,7 +176,7 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
     def copy_template(self):
         if self.template_output.toPlainText() == '':
-            self.dashboard.show_status('No email to copy', 5000)
+            self.main.show_status('No email to copy', 5000)
             return
         
         text = self.template_output.toPlainText()
@@ -184,7 +184,7 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         clipboard = QApplication.clipboard()
 
         clipboard.setText(text)
-        self.dashboard.show_status('Email copied to clipboard', 5000)
+        self.main.show_status('Email copied to clipboard', 5000)
 
     def clear_fields(self):
         self.template_output.clear()

@@ -1,0 +1,76 @@
+[
+    {
+        "title": "TIDE No Account",
+        "text": "{Greeting} {Name},\n\nThank you for contacting Texas Testing Support. We have been unable to locate a TIDE account associated with either the name or email address provided. Please contact your {Coordinator Type} {Coordinator Name} at {Coordinator Email}, for assistance with creating a TIDE account. \n\nOnce your account has been created, you will receive an email containing two secure links. If this email does not appear in your inbox, you may need to check your junk mail or spam folders for a message from the DoNotReply@cambiumassessment.com email address. You may also want to work with your school/district technical contact to add this address to your safe senders list. \n\nClick the first link, follow the on-screen prompts and requirements to create a new password, and click Submit when finished. \n\nPlease note, the secure link is only active for 15 minutes. If you miss the 15-minute window to reset your password, you can click on the second link in the email to request a new link. \n\nIf you have any further questions you can reply directly to this email, or call us at the number listed below and reference case# {Case Number}.\n\n{Closing},\n",
+        "options": [
+            {
+                "name": "Greeting",
+                "type": "dropdown",
+                "values": ["Good Morning", "Good Afternoon", "Good Evening", "Greetings", "Hello"]
+            },
+            {
+                "name": "Name",
+                "type": "input"
+            },
+            {
+                "name": "Coordinator Type",
+                "type": "dropdown",
+                "values": ["District Testing Coordinator", "Campus Testing Coordinator"]
+            },
+            {
+                "name": "Coordinator Name",
+                "type": "input"
+            },
+            {
+                "name": "Coordinator Email",
+                "type": "input"
+            },
+            {
+                "name": "Case Number",
+                "type": "input"
+            },
+            {
+                "name": "Closing",
+                "type": "dropdown",
+                "values": ["Thank you", "Regards", "Best Regards", "Respectfully"]
+            }
+        ]
+    },
+    {
+        "title": "TIDE No Account (LMS)",
+        "text": "{Greeting} {Name},\n\nThank you for contacting Texas Testing Support. We have been unable to locate a TIDE account associated with either the name or email address provided. Please contact your {Coordinator Type} {Coordinator Name} at {Coordinator Email}, for assistance with creating a TIDE account. \n\nOnce your account has been created, you will receive an email containing two secure links. If this email does not appear in your inbox, you may need to check your junk mail or spam folders for a message from the DoNotReply@cambiumassessment.com email address. You may also want to work with your school/district technical contact to add this address to your safe senders list. \n\nClick the first link, follow the on-screen prompts and requirements to create a new password, and click Submit when finished. \n\nPlease note, the secure link is only active for 15 minutes. If you miss the 15-minute window to reset your password, you can click on the second link in the email to request a new link. \n\nAdditional Note: For access to the LMS, if your user role was added into TIDE before 7 p.m.(CT), access will be available the following day. For users added after 7 p.m. (CT), access to the LMS will not be available until the day after the following day. \n\nIf you have any further questions you can reply directly to this email, or call us at the number listed below and reference case# {Case Number}.\n\n{Closing},\n",
+        "options": [
+            {
+                "name": "Greeting",
+                "type": "dropdown",
+                "values": ["Good Morning", "Good Afternoon", "Good Evening", "Greetings", "Hello"]
+            },
+            {
+                "name": "Name",
+                "type": "input"
+            },
+            {
+                "name": "Coordinator Type",
+                "type": "dropdown",
+                "values": ["District Testing Coordinator", "Campus Testing Coordinator"]
+            },
+            {
+                "name": "Coordinator Name",
+                "type": "input"
+            },
+            {
+                "name": "Coordinator Email",
+                "type": "input"
+            },
+            {
+                "name": "Case Number",
+                "type": "input"
+            },
+            {
+                "name": "Closing",
+                "type": "dropdown",
+                "values": ["Thank you", "Regards", "Best Regards", "Respectfully"]
+            }
+        ]
+    }
+]
