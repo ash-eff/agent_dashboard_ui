@@ -3,7 +3,11 @@ QWidget {
     color: #000000;
 }
 QWidget#link_widget {
-    border: 2px solid #bebebe;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+}
+QWidget#link_widget:hover {
+    border: 1px solid #747474;
     border-radius: 5px;
 }
 QWidget:item:selected {
@@ -31,8 +35,11 @@ QPushButton:hover {
     color: #000000;
     font: 18px Arial;
 }
-QPushButton.warning {
-    background-color: #ff0000;
+QPushButton#warning {
+    background-color: #a43939 !important;
+}
+QPushButton#warning:hover {
+    background-color: #d14c4c !important;
 }
 QLabel {
     font: 16px Arial;
@@ -57,6 +64,7 @@ QCheckBox {
 }
 QListWidget {
     font: 30px Arial;
+    padding: 10px;
 }
 QScrollBar:vertical {
     background: #f0f0f0;

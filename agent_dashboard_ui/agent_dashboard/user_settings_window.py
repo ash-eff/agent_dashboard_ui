@@ -29,7 +29,7 @@ class SettingsWindow(QWidget):
         # Create all widgets
         self.layout = QVBoxLayout()
         self.user_time_zone = QComboBox(self)
-        self.user_name_label = QLabel('User Name:', self)
+        self.user_name_label = QLabel('User Name: (First Name, Last Initial)', self)
         self.user_name_field = QLineEdit(self)
         self.time_zone_label = QLabel('Time Zone:', self)
         self.signature_label = QLabel('Email Signature:', self)
@@ -84,6 +84,7 @@ class SettingsWindow(QWidget):
 
         self.user_settings.save_settings(settings)
         self.dashboard.apply_style_settings()
+        self.dashboard.dashboard_window.apply_user_settings()
         self.close()
 
     def get_user_name(self):

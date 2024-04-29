@@ -3,7 +3,11 @@ QWidget {
     color: #b1b1b1;
 }
 QWidget#link_widget {
-    border: 2px solid #b1b1b1;
+    border: 1px solid #161616;
+    border-radius: 5px;
+}
+QWidget#link_widget:hover {
+    border: 1px solid #b1b1b1;
     border-radius: 5px;
 }
 QWidget:item:selected
@@ -32,8 +36,12 @@ QPushButton:hover {
     color: #b1b1b1;
     font: 18px Arial;
 }
-QPushButton.warning {
-    background-color: #ff0000 !important;
+QPushButton#warning {
+    background-color: #a43939 !important;
+
+}
+QPushButton#warning:hover {
+    background-color: #d14c4c !important;
 }
 QLabel {
     font: 16px Arial;

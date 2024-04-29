@@ -105,7 +105,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.top_layout.addWidget(widget)
         widget.show()
         self.setWindowTitle(title)
-    
+
     def apply_style_settings(self):
         settings = self.user_settings.settings
         if settings['dark_mode']:

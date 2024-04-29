@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QLabel,
     QPushButton,
     QHBoxLayout,
-    QLineEdit,
+    QMessageBox,
     QListWidget,
     QListWidgetItem,
     QSizePolicy,
@@ -20,6 +20,8 @@ from PyQt5.QtWidgets import (
 )
 
 from datetime import datetime
+
+from link_window import LinkWindow
 
 from user_settings_window import SettingsWindow
 
@@ -42,25 +44,23 @@ class DashboardWindow(QWidget):
         self.title_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
-        self.upper_group = QGroupBox(self)
-        self.left_group = QGroupBox(self)
-        self.right_group = QGroupBox(self)      
-        self.timer = QTimer(self)
-        self.user_greet_label = QLabel(f'Welcome to the Agent Dashboard, {self.user_settings.get_setting("username")}', self)
+        self.settings_button_layout = QHBoxLayout()
+        self.add_button_layout = QHBoxLayout()
+        self.user_greet_label = QLabel(self)
         self.your_time_label = QLabel(self)
         self.your_time = QLabel(self)
         self.cai_time_label = QLabel(self)
         self.cai_time = QLabel(self)
         self.texas_time_label = QLabel(self)
         self.texas_time = QLabel(self)
+        self.upper_group = QGroupBox(self)
+        self.left_group = QGroupBox(self)
+        self.right_group = QGroupBox(self)      
+        self.timer = QTimer(self)
         self.spacer = QWidget()
         self.settings_button = QPushButton('Settings', self)
         self.link_label = QLabel('Important Links:', self)
         self.links = QListWidget(self)
-        self.add_link_name_label = QLabel('Link Name:', self)
-        self.add_link_name = QLineEdit(self)
-        self.add_link_url_label = QLabel('Link URL:', self)
-        self.add_link_url = QLineEdit(self)
         self.add_link_btn = QPushButton('Add Link', self)
 
         # Set up widget properties
@@ -70,6 +70,8 @@ class DashboardWindow(QWidget):
         self.texas_time_label.setText('Texas Time:')
         self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.links.setFocusPolicy(Qt.NoFocus)
+        self.settings_button.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size * 2)
+        self.add_link_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size * 2)
 
         # Set up layouts
         self.main_layout.addLayout(self.upper_layout)
@@ -97,26 +99,32 @@ class DashboardWindow(QWidget):
         self.left_layout.addWidget(self.texas_time)
         self.left_layout.addWidget(uic.create_line(self))
         self.left_layout.addWidget(self.spacer)
-        self.left_layout.addWidget(self.settings_button)
+        self.settings_button_layout.addWidget(self.settings_button)
+        self.left_layout.addLayout(self.settings_button_layout)
         self.right_layout.addWidget(self.link_label)
         self.right_layout.addWidget(self.links)
-        self.right_layout.addWidget(self.add_link_name_label)
-        self.right_layout.addWidget(self.add_link_name)
-        self.right_layout.addWidget(self.add_link_url_label)
-        self.right_layout.addWidget(self.add_link_url)
-        self.right_layout.addWidget(self.add_link_btn)
+        self.add_button_layout.setAlignment(Qt.AlignRight)
+        self.add_button_layout.addWidget(self.add_link_btn)
+        self.right_layout.addLayout(self.add_button_layout)
 
         # Connect signals
         self.timer.timeout.connect(self.update_time)
-        self.add_link_btn.clicked.connect(self.add_link)
         self.settings_button.clicked.connect(self.open_settings)
+        self.add_link_btn.clicked.connect(lambda: self.open_link_window('add', ''))
         self.links.itemClicked.connect(self.open_link)
-
+        self.apply_user_settings()
         self.timer.start(1000)
 
     def showEvent(self, event):
         self.update_time()  
         self.load_links()
+        if self.user_settings.get_setting('username') == '':
+            QTimer.singleShot(100, self.show_message_box)
+
+    def show_message_box(self):
+        confirmation = QMessageBox.question(self, 'Update Settings', 'Please update your settings before using this app for the first time.', QMessageBox.Ok)
+        if confirmation == QMessageBox.Ok:
+            self.open_settings()
 
     def update_time(self):
         format = '%I:%M:%S %p'
@@ -137,28 +145,10 @@ class DashboardWindow(QWidget):
         self.your_time.setText(current_time)
         self.cai_time.setText(cai_time)
         self.texas_time.setText(texas_time)
-    
-    def add_link(self):
-        link_name = self.add_link_name.text()
-        link_url = self.add_link_url.text()
-        if link_name and link_url:
-            new_link = {
-                'link_name': link_name,
-                'link_url': link_url
-            }
 
-            with open(self.links_file, 'r') as file:
-                try:
-                    link = json.load(file)
-                except json.JSONDecodeError:
-                    link = []
-
-            link.append(new_link)
-
-            with open(self.links_file, 'w') as file:
-                json.dump(link, file, indent=4)
-
-        self.load_links()
+    def open_link_window(self, mode, link_name):
+        self.link_window = LinkWindow(mode, link_name, self)
+        self.link_window.show()
 
     def load_links(self):
         self.links.clear()
@@ -172,19 +162,20 @@ class DashboardWindow(QWidget):
                     link_label.setEnabled(False)
                     item_layout.addWidget(link_label)
                     edit_button = QPushButton('Edit')
-                    edit_button.setFixedWidth(80)
-                    edit_button.setFixedHeight(80)
-                    edit_button.clicked.connect(lambda: self.edit_link(link['link_name']))
+                    edit_button.setFixedWidth(40)
+                    edit_button.setFixedHeight(40)
+                    edit_button.clicked.connect(lambda: self.open_link_window('edit', link['link_name']))
                     item_layout.addWidget(edit_button)
-                    delete_button = QPushButton('Delete')
-                    delete_button.setFixedWidth(80)
-                    delete_button.setFixedHeight(80)
-                    delete_button.clicked.connect(lambda: self.delete_link(link['link_name']))
+                    delete_button = QPushButton('X')
+                    delete_button.setObjectName('warning')
+                    delete_button.setFixedWidth(40)
+                    delete_button.setFixedHeight(40)
+                    delete_button.clicked.connect(lambda: self.open_link_window('delete', link['link_name']))
                     item_layout.addWidget(delete_button)
                     widget = QWidget()
                     widget.setObjectName('link_widget')
                     widget.setLayout(item_layout)
-                    widget.setMinimumSize(QSize(widget.width(), 100))
+                    widget.setMinimumSize(QSize(widget.width(), 60))
                     item = QListWidgetItem(link['link_name'])
                     item.setSizeHint(widget.sizeHint())
                     self.links.addItem(item)
@@ -210,3 +201,7 @@ class DashboardWindow(QWidget):
     def open_settings(self):
         self.settings_window = SettingsWindow(self.dashboard, self.user_settings, self.dashboard.dark_mode_stylesheet, self.dashboard.light_mode_stylesheet)
         self.settings_window.show()
+
+    def apply_user_settings(self):
+        self.user_greet_label.setText(f'Welcome to the Agent Dashboard, {self.user_settings.get_setting("username")}')
+        self.update_time()
