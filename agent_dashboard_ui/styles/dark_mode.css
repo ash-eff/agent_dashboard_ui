@@ -1,0 +1,108 @@
+QWidget {
+    background-color: #2b2b2b;
+    color: #b1b1b1;
+}
+QWidget#link_widget {
+    border: 1px solid #161616;
+    border-radius: 5px;
+}
+QWidget#link_widget:hover {
+    border: 1px solid #b1b1b1;
+    border-radius: 5px;
+}
+QWidget:item:selected
+{
+     background-color:  #254a5a;
+}
+QGroupBox, QLineEdit, QComboBox, QTextEdit{
+    border: 1px solid #161616;
+    border-radius: 5px;
+    margin-top: 1ex;
+}
+QPushButton {
+    background-color: #3a3a3a;
+    color: #b1b1b1;
+    font: 18px Arial;
+    border-radius: 5px;
+}
+QPushButton.selected {
+    background-color: #254a5a;
+}
+QPushButton.selected:hover {
+    background-color: #33687f;
+}
+QPushButton:hover {
+    background-color: #505050;
+    color: #b1b1b1;
+    font: 18px Arial;
+}
+QPushButton#warning {
+    background-color: #a43939 !important;
+
+}
+QPushButton#warning:hover {
+    background-color: #d14c4c !important;
+}
+QLabel {
+    font: 16px Arial;
+}
+QLabel#link_label {
+    font: 20px Arial;
+}
+QFont {
+    font: 18px Arial;
+}
+QTextEdit {
+    font: 16px Arial;
+}
+QLineEdit {
+    font: 16px Arial;
+}
+QComboBox{
+    font: 16px Arial;
+}
+QCheckBox {
+    font: 16px Arial;
+}
+QListWidget {
+    font: 30px Arial;
+    padding: 10px;
+}
+QScrollBar:vertical {
+    background: #2b2b2b;
+    width: 15px;
+    margin: 15px 0 15px 0;
+    border: 1px solid #161616;
+    border-radius: 5px;
+}
+QScrollBar::handle:vertical {
+    background: #3a3a3a;
+    min-height: 20px;
+    border-radius: 5px;
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+QScrollBar:horizontal {
+    background: #2b2b2b;
+    height: 15px;
+    margin: 0 15px 0 15px;
+    border: 1px solid #161616;
+    border-radius: 5px;
+}
+QScrollBar::handle:horizontal {
+    background: #3a3a3a;
+    min-width: 20px;
+    border-radius: 5px;
+}
+QScrollArea {
+    border: none
+}
+*:focus {
+    border: 2px solid #b1b1b1;
+    border-radius: 5px;
+}

@@ -34,8 +34,7 @@
                 "type": "dropdown",
                 "values": ["Thank you", "Regards", "Best Regards", "Respectfully"]
             }
-        ],
-        "signature": "Ash F.\nTexas Testing Support\nPhone: 833-601-8821\nEmail: TexasTestingSupport@cambiumassessment.com\nhttps://TexasAssessment.gov"
+        ]
     },
     {
         "title": "TIDE No Account (LMS)",
@@ -72,7 +71,6 @@
                 "type": "dropdown",
                 "values": ["Thank you", "Regards", "Best Regards", "Respectfully"]
             }
-        ],
-        "signature": "Ash F.\nTexas Testing Support\nPhone: 833-601-8821\nEmail: TexasTestingSupport@cambiumassessment.com\nhttps://TexasAssessment.gov"
+        ]
     }
 ]

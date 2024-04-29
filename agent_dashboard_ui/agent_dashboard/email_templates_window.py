@@ -1,7 +1,5 @@
 import json
 
-from PyQt5.QtGui import QFont
-
 from PyQt5.QtWidgets import (
     QWidget, 
     QPushButton, 
@@ -9,23 +7,24 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QTextEdit,
     QLabel,
-    QSizePolicy,
     QComboBox,
     QLineEdit,
     QFormLayout,
     QGroupBox,
     QMessageBox,
-    QApplication
+    QApplication,
+    QSizePolicy,
+    QScrollArea
 )
 
 from helper_classes import ButtonSelectionMixin
 
 class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
-    def __init__(self, dashboard, parent=None):
+    def __init__(self, dashboard, user_setting, parent=None):
         super().__init__(parent)
+        self.user_settings = user_setting
+        self.email_templates_file = 'data/email_templates.json'
         self.dashboard = dashboard
-        self.btn_font_size = self.dashboard.btn_font_size
-        self.font_size = self.dashboard.font_size
         self.btn_x_size = 250
         self.btn_y_size = 75
         self.current_template = None
@@ -39,64 +38,70 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
         self.outer_layout = QHBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
+        self.scroll_area = QScrollArea(self)
+        self.scroll_layout = QVBoxLayout()
         self.upper_right_side_layout = QHBoxLayout()
         self.lower_right_side_layout = QHBoxLayout()
-        self.spacer = QWidget()
+        self.scroll_widget = QWidget()
         self.options_field = QFormLayout()
         self.template_output = QTextEdit(self)
-        self.spacer = QWidget()
         self.right_side_group = QGroupBox()
+        self.left_side_group = QGroupBox()
         self.button_holder_layout = QHBoxLayout()
         self.generate_btn = QPushButton('Generate Email', self)
         self.copy_btn = QPushButton('Copy Email', self)
         self.clear_fields_btn = QPushButton('Clear Fields', self)
 
         # Set up widget properties
-        self.spacer.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.template_output.setReadOnly(True)
-        self.generate_btn.setFont(QFont('Arial', self.font_size))
         self.generate_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.generate_btn.hide()
-        self.copy_btn.setFont(QFont('Arial', self.font_size))
         self.copy_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.copy_btn.hide()
-        self.clear_fields_btn.setFont(QFont('Arial', self.font_size))
         self.clear_fields_btn.setFixedSize(self.dashboard.btn_x_size + 15, self.dashboard.btn_y_size)
         self.clear_fields_btn.hide()
-        self.template_output.setFont(QFont('Arial', self.font_size))
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setFixedWidth(300)
 
         # Set up layouts
         self.main_layout.addLayout(self.outer_layout)
-        self.outer_layout.addLayout(self.left_layout)
         self.right_layout.addLayout(self.upper_right_side_layout)
         self.right_layout.addLayout(self.button_holder_layout)
         self.right_layout.addLayout(self.lower_right_side_layout)
         self.upper_right_side_layout.addLayout(self.options_field)
+        self.left_side_group.setLayout(self.left_layout)
         self.right_side_group.setLayout(self.right_layout)
+        self.scroll_widget.setLayout(self.scroll_layout)
+        self.scroll_area.setWidget(self.scroll_widget)
         self.setLayout(self.main_layout)
-
 
         # Add widgets to layouts
         self.button_holder_layout.addWidget(self.generate_btn)
         self.button_holder_layout.addWidget(self.copy_btn)
         self.button_holder_layout.addWidget(self.clear_fields_btn)
         self.lower_right_side_layout.addWidget(self.template_output)
+        self.outer_layout.addWidget(self.left_side_group)
         self.outer_layout.addWidget(self.right_side_group)
 
         self.email_templates = self.get_email_templates()
         if self.email_templates != {}:
             for template in self.email_templates:
                 template_btn = QPushButton(template.get('title'), self)
-                template_btn.setFont(QFont('Arial', self.btn_font_size))
                 template_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
 
                 template_btn.template_data = template
 
                 template_btn.clicked.connect(self.on_template_btn_clicked)
 
-                self.left_layout.addWidget(template_btn)
+                self.scroll_layout.addWidget(template_btn)
 
-        self.left_layout.addWidget(self.spacer)
+            self.left_layout.addWidget(self.scroll_area)
+            spacer = QWidget()
+            spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.scroll_layout.addWidget(spacer)
+
+        self.outer_layout.setStretch(0,1)
+        self.outer_layout.setStretch(1,3)
 
         #connect signals
         self.generate_btn.clicked.connect(self.populate_email_from_template)
@@ -105,7 +110,7 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
     def get_email_templates(self):
         try:
-            with open('email_templates.json', 'r') as file:
+            with open(self.email_templates_file, 'r') as file:
                 email_templates = json.load(file)
         except FileNotFoundError:
             email_templates = {}
@@ -127,16 +132,13 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         for option in template_data['options']:
             label = QLabel(option['name'])
-            label.setFont(QFont('Arial', self.font_size))
 
             if option['type'] == 'dropdown':
                 dropdown = QComboBox()
                 dropdown.addItems(option['values'])
-                dropdown.setFont(QFont('Arial', self.font_size))
                 self.options_field.addRow(label,dropdown)
             elif option['type'] == 'input':
                 input_field = QLineEdit()
-                input_field.setFont(QFont('Arial', self.font_size))
                 self.options_field.addRow(label, input_field)
         
         self.generate_btn.show()
@@ -167,7 +169,8 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
             values[label] = value
 
         template_text = template_text.format(**values)
-        signature_text = self.current_template['signature']
+        settings = self.user_settings.get_settings()
+        signature_text = settings['user_signature']
 
         self.template_output.setPlainText(template_text + signature_text)
 

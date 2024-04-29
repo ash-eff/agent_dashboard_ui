@@ -1,8 +1,6 @@
 import json
 import os
 
-from PyQt5.QtGui import QFont
-
 from PyQt5.QtWidgets import (
     QWidget, 
     QVBoxLayout, 
@@ -12,6 +10,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QScrollArea,
     QSizePolicy,
+    QGroupBox
 )
 
 from note import Note
@@ -21,9 +20,8 @@ from helper_classes import ButtonSelectionMixin
 class CaseNotesWindow(QWidget, ButtonSelectionMixin):
     def __init__(self, dashboard, parent=None):
         super().__init__(parent)
+        self.case_file = 'data/notes.json'
         self.dashboard = dashboard
-        self.btn_font_size = self.dashboard.btn_font_size
-        self.font_size = self.dashboard.font_size
         self.last_note_title = ''
         self.original_note_title = ''
         self.initUI()
@@ -33,11 +31,13 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         # Create all widgets
         self.main_layout = QVBoxLayout()
         self.outer_layout = QHBoxLayout()
-        self.upper_layout = QVBoxLayout()
         self.left_layout = QVBoxLayout()
         self.right_layout = QVBoxLayout()
-        self.case_btn_container = QWidget()
-        self.case_btn_scroll = QScrollArea()
+        self.scroll_area = QScrollArea(self)
+        self.scroll_layout = QVBoxLayout()
+        self.left_side_group = QGroupBox()
+        self.right_side_group = QGroupBox()
+        self.scroll_widget = QWidget()
         self.bottom_button_layout = QHBoxLayout()
         self.new_note_btn = QPushButton('New Note', self)      
         self.save_note_btn = QPushButton('Save Note', self)
@@ -45,33 +45,35 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.case_notes = QTextEdit(self)
 
         # Set up widget properties
-        self.case_btn_scroll.setWidgetResizable(True)
-        self.case_btn_scroll.setFixedWidth(180)
-        self.new_note_btn.setFont(QFont('Arial', self.btn_font_size))
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setFixedWidth(190)
         self.new_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
-        self.save_note_btn.setFont(QFont('Arial', self.btn_font_size))
         self.save_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
-        self.delete_note_btn.setFont(QFont('Arial', self.btn_font_size))
-        self.delete_note_btn.setStyleSheet('QPushButton {color: black; background-color: red;}')
+        self.delete_note_btn.setObjectName('warning')
         self.delete_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
         self.case_notes.setPlaceholderText('Case Notes')
-        self.case_notes.setFont(QFont('Arial', self.font_size))
+        self.left_side_group.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+
+        self.outer_layout.setStretch(0,1)
+        self.outer_layout.setStretch(1,3)
 
         # Set up layouts
-        self.case_btn_container.setLayout(self.left_layout)
-        self.case_btn_scroll.setWidget(self.case_btn_container) 
-        self.outer_layout.addWidget(self.case_btn_scroll)
-        self.outer_layout.addLayout(self.right_layout)
-        self.outer_layout.addLayout(self.upper_layout)
         self.main_layout.addLayout(self.outer_layout)
         self.main_layout.addLayout(self.bottom_button_layout)
+        self.left_side_group.setLayout(self.left_layout)
+        self.right_side_group.setLayout(self.right_layout)
+        self.scroll_widget.setLayout(self.scroll_layout)
+        self.scroll_area.setWidget(self.scroll_widget)
         self.setLayout(self.main_layout)
 
         # Add widgets to layouts
         self.right_layout.addWidget(self.case_notes)
+        self.left_layout.addWidget(self.scroll_area)
         self.bottom_button_layout.addWidget(self.new_note_btn)
         self.bottom_button_layout.addWidget(self.save_note_btn)
         self.bottom_button_layout.addWidget(self.delete_note_btn)
+        self.outer_layout.addWidget(self.left_side_group)
+        self.outer_layout.addWidget(self.right_side_group)
 
         #connect signals
         self.new_note_btn.clicked.connect(self.open_blank_note)
@@ -79,10 +81,12 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.delete_note_btn.clicked.connect(self.delete_note)
 
     def showEvent(self, event):
-        self.clear_layout(self.left_layout) 
-
+        self.clear_layout(self.scroll_layout) 
         self.load_note_buttons()
         self.load_last_note()
+        button = self.get_button_from_title(self.last_note_title)
+        if button is not None:
+            self.set_button_selected(button)
 
     def hideEvent(self, event):
         super().hideEvent(event)
@@ -111,7 +115,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
     def load_last_note(self):
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     notes_dict = json.load(file)
                 except json.JSONDecodeError:
@@ -143,7 +147,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         note_dict = note.to_dict()
 
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     existing_notes = json.load(file)
                 except json.JSONDecodeError:
@@ -161,7 +165,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             existing_notes.append(note_dict)
             new_note_added = True
 
-        with open('notes.json', 'w') as file:
+        with open(self.case_file, 'w') as file:
             json.dump(existing_notes, file, indent=4)
 
         self.last_note_title = note_dict['title']
@@ -171,14 +175,15 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             self.load_note_buttons()
 
     def load_note_buttons(self):
-        for i in reversed(range(self.left_layout.count())):
-            widget = self.left_layout.itemAt(i).widget()
+        button = None
+        for i in reversed(range(self.scroll_layout.count())):
+            widget = self.scroll_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
         try:
-            with open('notes.json', 'r') as file:
-                if os.stat('notes.json').st_size != 0:
+            with open(self.case_file, 'r') as file:
+                if os.stat(self.case_file).st_size != 0:
                     notes_dict = json.load(file)
                 else:
                     notes_dict = []
@@ -191,20 +196,21 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             if note.title:
                 button = QPushButton(note.title)
                 button.setFixedSize(150, 50)
-                button.setFont(QFont('Arial', self.btn_font_size))
                 button.note_title = note.title
                 button.clicked.connect(self.open_note_from_button)
-                self.left_layout.addWidget(button)
+                self.scroll_layout.addWidget(button)
 
-        self.set_button_selected(button)
+        if button is not None:
+            self.set_button_selected(button)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.left_layout.addWidget(spacer)
+        self.scroll_layout.addWidget(spacer)
 
     def open_note_from_button(self):
+        self.save_note()
         button = self.sender()
         self.set_button_selected(button)
-        with open('notes.json', 'r') as file:
+        with open(self.case_file, 'r') as file:
             notes_dict = json.load(file)
         note_dict = next((note for note in notes_dict if note['title'] == button.note_title), None)
 
@@ -222,7 +228,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             return
 
         try:
-            with open('notes.json', 'r') as file:
+            with open(self.case_file, 'r') as file:
                 try:
                     notes_dict = json.load(file)
                 except json.JSONDecodeError:
@@ -239,8 +245,14 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
 
         notes_dict = [note.to_dict() for note in notes]
 
-        with open('notes.json', 'w') as file:
+        with open(self.case_file, 'w') as file:
             json.dump(notes_dict, file, indent=4)
 
         self.load_note_buttons()
         self.open_blank_note()
+
+    def get_button_from_title(self, title):
+        for widget in self.findChildren(QPushButton):
+            if widget is not None and widget.text() == title:
+                return widget
+        return None
