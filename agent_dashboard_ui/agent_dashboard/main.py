@@ -1,4 +1,6 @@
+import logging
 import sys
+import os
 
 from PyQt5.QtWidgets import (
     QApplication, 
@@ -7,6 +9,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout, 
     QHBoxLayout, 
     QMainWindow, 
+    QMessageBox,
     QFrame,
 )
 
@@ -18,13 +21,38 @@ import email_templates_window as email_w
 import format_tools_window as format_w
 import contact_window as cont_w
 
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s',
+    filename='crash_report.log',
+    filemode='w'
+)
+
+# Set up the global exception handler
+def handle_uncaught_exceptions(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    logging.error("Uncaught exception", exc_info=(exc_type, exc_value, exc_traceback))
+
+    error_msg = QMessageBox()
+    error_msg.setWindowTitle("Error")
+    error_msg.setText("An uncaught exception occurred. Please check the error logs.")
+    error_msg.setIcon(QMessageBox.Critical)
+
+    error_msg.exec_()
+
+if getattr(sys, 'frozen', False):
+    sys.excepthook = handle_uncaught_exceptions
+
 class AgentDashboard(QMainWindow, ButtonSelectionMixin):
     def __init__(self):
         super().__init__()
         self.dark_mode_stylesheet = None
         self.light_mode_stylesheet = None
         self.load_stylesheets()
-        self.user_settings = UserSettings()
+        self.user_settings = UserSettings(self.resource_path('data/user_settings.json'))
         self.currently_selected_button = None
         self.initUI()
 
@@ -40,7 +68,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.dashboard_window = dash_w.DashboardWindow(self, self.user_settings)
         self.case_notes_window = case_w.CaseNotesWindow(self)
         self.email_templates_window = email_w.EmailTemplatesWindow(self, self.user_settings)
-        self.format_tool_window = format_w.FormatToolsWindow(self)
+        self.format_tool_window = format_w.FormatToolsWindow(self, self.user_settings)
         self.contact_window = cont_w.ContactWindow(self)
 
         self.dashboard_btn = QPushButton('Dashboard', self)
@@ -91,9 +119,11 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.statusBar().showMessage(message, time)
 
     def load_stylesheets(self):
-        with open('styles/dark_mode.css', 'r') as f:
+        dark_mode_path = self.resource_path('styles\dark_mode.css')
+        light_mode_path = self.resource_path('styles\light_mode.css')
+        with open(dark_mode_path, 'r') as f:
             self.dark_mode_stylesheet = f.read()
-        with open('styles/light_mode.css', 'r') as f:
+        with open(light_mode_path, 'r') as f:
             self.light_mode_stylesheet = f.read()
 
     def swap_templates(self, widget, title):
@@ -112,6 +142,16 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
             QApplication.instance().setStyleSheet(self.dark_mode_stylesheet)
         else:
             QApplication.instance().setStyleSheet(self.light_mode_stylesheet)
+
+    @staticmethod
+    def resource_path(relative_path):
+        if getattr(sys, 'frozen', False):
+            exe_path = os.path.dirname(sys.executable)
+            base_path = os.path.dirname(exe_path)
+            return os.path.join(base_path, relative_path)
+        else:
+            base_path = os.path.abspath(".")
+            return os.path.join(base_path, 'agent_dashboard', relative_path)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

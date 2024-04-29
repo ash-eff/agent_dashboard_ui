@@ -1,0 +1,6 @@
+('styles',
+ 'styles\\',
+ [],
+ 'DATA',
+ [('styles\\dark_mode.css', 'styles\\dark_mode.css', 'DATA'),
+  ('styles\\light_mode.css', 'styles\\light_mode.css', 'DATA')])

@@ -18,10 +18,10 @@ from note import Note
 from helper_classes import ButtonSelectionMixin
 
 class CaseNotesWindow(QWidget, ButtonSelectionMixin):
-    def __init__(self, dashboard, parent=None):
+    def __init__(self, main, parent=None):
         super().__init__(parent)
-        self.case_file = 'data/notes.json'
-        self.dashboard = dashboard
+        self.case_file = main.resource_path('data/notes.json')
+        self.main = main
         self.last_note_title = ''
         self.original_note_title = ''
         self.initUI()
@@ -42,15 +42,15 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.new_note_btn = QPushButton('New Note', self)      
         self.save_note_btn = QPushButton('Save Note', self)
         self.delete_note_btn = QPushButton('Delete Note', self)
-        self.case_notes = QTextEdit(self)
+        self.case_notes = PlainTextPasteQTextEdit(self)
 
         # Set up widget properties
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setFixedWidth(190)
-        self.new_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
-        self.save_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
+        self.new_note_btn.setFixedSize(self.main.btn_x_size, self.main.btn_y_size)
+        self.save_note_btn.setFixedSize(self.main.btn_x_size, self.main.btn_y_size)
         self.delete_note_btn.setObjectName('warning')
-        self.delete_note_btn.setFixedSize(self.dashboard.btn_x_size, self.dashboard.btn_y_size)
+        self.delete_note_btn.setFixedSize(self.main.btn_x_size, self.main.btn_y_size)
         self.case_notes.setPlaceholderText('Case Notes')
         self.left_side_group.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
 
@@ -159,7 +159,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         for i, existing_note in enumerate(existing_notes):
             if existing_note['title'] == self.original_note_title:
                 existing_notes[i] = note_dict
-                self.dashboard.show_status('Case updated successfully', 2000)
+                self.main.show_status('Case updated successfully', 2000)
                 break
         else:
             existing_notes.append(note_dict)
@@ -171,7 +171,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.last_note_title = note_dict['title']
         self.original_note_title = note_dict['title']
         if new_note_added:
-            self.dashboard.show_status('Case saved successfully', 2000)
+            self.main.show_status('Case saved successfully', 2000)
             self.load_note_buttons()
 
     def load_note_buttons(self):
@@ -256,3 +256,7 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
             if widget is not None and widget.text() == title:
                 return widget
         return None
+    
+class PlainTextPasteQTextEdit(QTextEdit):
+    def insertFromMimeData(self, source):
+        self.insertPlainText(source.text())

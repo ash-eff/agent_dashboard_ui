@@ -16,7 +16,7 @@ class ButtonSelectionMixin:
             self.currently_selected_button.setStyle(self.currently_selected_button.style())
 
 class UserSettings:
-    def __init__(self, settings_file='data/user_settings.json'):
+    def __init__(self, settings_file):
         self.settings_file = settings_file
         if not os.path.isfile(self.settings_file) or os.path.getsize(self.settings_file) == 0:
             default_settings = {
