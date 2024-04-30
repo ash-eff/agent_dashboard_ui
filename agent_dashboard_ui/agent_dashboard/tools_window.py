@@ -44,6 +44,7 @@ class ToolsWindow(QWidget):
         self.district_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.format_user_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.email_template_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
+        self.email_template_btn.setEnabled(False)
         self.spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.right_side_group.setStyleSheet("QGroupBox { padding: 10px; }")
 
