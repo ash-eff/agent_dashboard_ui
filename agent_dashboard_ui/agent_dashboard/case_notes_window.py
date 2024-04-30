@@ -207,8 +207,9 @@ class CaseNotesWindow(QWidget, ButtonSelectionMixin):
         self.scroll_layout.addWidget(spacer)
 
     def open_note_from_button(self):
-        self.save_note()
         button = self.sender()
+        self.save_note()
+        print(f'type: {type(button)}')
         self.set_button_selected(button)
         with open(self.case_file, 'r') as file:
             notes_dict = json.load(file)

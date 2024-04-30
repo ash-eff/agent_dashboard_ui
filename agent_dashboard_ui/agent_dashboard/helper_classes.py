@@ -8,12 +8,14 @@ class ButtonSelectionMixin:
 
     def set_button_selected(self, button):
         if self.currently_selected_button is not None:
-            self.currently_selected_button.setProperty("class", "")
-            self.currently_selected_button.setStyle(self.currently_selected_button.style())
+            self.currently_selected_button.setObjectName("")
+            self.currently_selected_button.style().unpolish(self.currently_selected_button)
+            self.currently_selected_button.style().polish(self.currently_selected_button)
         if button is not None:
             self.currently_selected_button = button
-            self.currently_selected_button.setProperty("class", "selected")
-            self.currently_selected_button.setStyle(self.currently_selected_button.style())
+            self.currently_selected_button.setObjectName("selected")
+            self.currently_selected_button.style().unpolish(self.currently_selected_button)
+            self.currently_selected_button.style().polish(self.currently_selected_button)
 
 class UserSettings:
     def __init__(self, settings_file):

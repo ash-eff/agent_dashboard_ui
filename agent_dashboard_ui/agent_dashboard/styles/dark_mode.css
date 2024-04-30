@@ -29,10 +29,10 @@ QPushButton {
     font: 18px Arial;
     border-radius: 5px;
 }
-QPushButton.selected {
+QPushButton#selected {
     background-color: #254a5a;
 }
-QPushButton.selected:hover {
+QPushButton#selected:hover {
     background-color: #33687f;
 }
 QPushButton:hover {
