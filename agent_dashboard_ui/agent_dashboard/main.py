@@ -18,7 +18,7 @@ from helper_classes import ButtonSelectionMixin, UserSettings
 import dashboard_window as dash_w
 import case_notes_window as case_w
 import email_templates_window as email_w
-import format_tools_window as format_w
+import tools_window as tools_w
 import contact_window as cont_w
 
 logging.basicConfig(
@@ -68,7 +68,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.dashboard_window = dash_w.DashboardWindow(self, self.user_settings)
         self.case_notes_window = case_w.CaseNotesWindow(self)
         self.email_templates_window = email_w.EmailTemplatesWindow(self, self.user_settings)
-        self.format_tool_window = format_w.FormatToolsWindow(self, self.user_settings)
+        self.tools_window = tools_w.ToolsWindow(self, self.user_settings)
         self.contact_window = cont_w.ContactWindow(self)
 
         self.dashboard_btn = QPushButton('Dashboard', self)
@@ -83,9 +83,9 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.email_template_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
         self.email_template_btn.clicked.connect(lambda: self.swap_templates(self.email_templates_window, 'Agent Dashboard - Email Templates'))
         
-        self.format_btn = QPushButton('Format Tools', self)
-        self.format_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
-        self.format_btn.clicked.connect(lambda: self.swap_templates(self.format_tool_window, 'Agent Dashboard - Format Tools'))
+        self.tools_btn = QPushButton('Tools', self)
+        self.tools_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
+        self.tools_btn.clicked.connect(lambda: self.swap_templates(self.tools_window, 'Agent Dashboard - Tools'))
 
         self.contact_btn = QPushButton('Contact', self)
         self.contact_btn.setFixedSize(self.btn_x_size, self.btn_y_size)
@@ -98,7 +98,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         horizontal_layout.addWidget(self.dashboard_btn)
         horizontal_layout.addWidget(self.case_notes_bts)
         horizontal_layout.addWidget(self.email_template_btn)
-        horizontal_layout.addWidget(self.format_btn)
+        horizontal_layout.addWidget(self.tools_btn)
         horizontal_layout.addWidget(self.contact_btn)
         button_layout.addLayout(horizontal_layout)
         

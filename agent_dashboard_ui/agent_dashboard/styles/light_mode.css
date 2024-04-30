@@ -28,13 +28,18 @@ QPushButton {
     font: 18px Arial;
     border-radius: 5px;
 }
-QPushButton.selected {
+QPushButton:disabled {
+    background-color: #676767;
+    color: #000000;
+    font: 18px Arial;
+}
+QPushButton#selected {
     background-color: #90EE90;
 }
 QPushButton.selected:hover {
     background-color: #b1f7b1;
 }
-QPushButton:hover {
+QPushButton#selected:hover {
     background-color: #afafaf;
     color: #000000;
     font: 18px Arial;
