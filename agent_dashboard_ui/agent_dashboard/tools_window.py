@@ -80,11 +80,8 @@ class ToolsWindow(QWidget):
         self.right_layout.addWidget(widget)
         widget.show()
 
-
-
     def clear_layout(self, layout):
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
-

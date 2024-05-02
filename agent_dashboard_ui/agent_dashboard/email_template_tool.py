@@ -1,13 +1,15 @@
-from PyQt5.QtCore import Qt
-
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import (
     QWidget, 
     QTextEdit,
     QVBoxLayout,
-    QApplication,
     QMenu,
     QAction,
-    QPushButton
+    QInputDialog,
+    QListWidget,
+    QListWidgetItem,
+    QHBoxLayout,
+    QLabel
 )
 
 class EmailTemplateBuilderTool(QWidget):
@@ -21,22 +23,45 @@ class EmailTemplateBuilderTool(QWidget):
         # Create all widgets
         self.email_template = CustomTextEdit(self)
         self.box_layout = QVBoxLayout()
-        self.box_layout.addWidget(self.email_template)
-
-        self.setLayout(self.box_layout)
+        self.options = QListWidget(self)
 
         # Set up widget properties
 
         # Set up layouts
+        self.box_layout.addWidget(self.email_template)
+        self.box_layout.addWidget(self.options)
+        self.setLayout(self.box_layout)
 
         # Add widgets to layouts
 
         # Connect signals
 
     def add_dropdown_menu(self):
-        words = self.email_template.toPlainText().split()
-        words.insert(self.email_template.textCursor().position(), 'dropdown')
-        self.email_template.setText(' '.join(words))
+        dropdown_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter dropdown name:')
+        if ok:
+            dropdown_items, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter dropdown items separated by comma:')
+            if ok:
+                dropdown_items = dropdown_items.split(',')
+                self.add_option(dropdown_name, dropdown_items)
+                words = self.email_template.toPlainText().split()
+                words.insert(self.email_template.textCursor().position(), '{' + dropdown_name + '}')
+                self.email_template.setText(' '.join(words))
+
+    def add_option(self, option_name, option_items):
+        item_layout = QHBoxLayout()
+        widget = QWidget()
+        widget.setObjectName('link_widget')
+
+        # Create a QLabel with the formatted_option text
+        label = QLabel(f"{option_name} : {', '.join(option_items)}")
+        item_layout.addWidget(label)
+        widget.setLayout(item_layout)
+        widget.setMinimumSize(QSize(widget.width(), 60))
+
+        item = QListWidgetItem()
+        item.setSizeHint(widget.sizeHint())
+        self.options.addItem(item)
+        self.options.setItemWidget(item, widget)    
 
 class CustomTextEdit(QTextEdit):
     def __init__(self, tools_window, parent=None):

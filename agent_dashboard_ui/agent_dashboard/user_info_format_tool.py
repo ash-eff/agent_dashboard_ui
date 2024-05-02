@@ -23,7 +23,7 @@ class UserInfoFormatTool(QWidget):
     def initUI(self):
         # Create all widgets
         self.layout = QVBoxLayout()
-        self.user_information_input = QTextEdit()
+        self.user_information_input = PlainTextPasteQTextEdit()
         self.user_information_output = QTextEdit()
         self.format_btn = QPushButton('Format')
         self.copy_btn = QPushButton('Copy')
@@ -108,3 +108,7 @@ class UserInfoFormatTool(QWidget):
 
         clipboard.setText(text)
         self.tool_window.main.show_status('Email copied to clipboard', 5000)
+
+class PlainTextPasteQTextEdit(QTextEdit):
+    def insertFromMimeData(self, source):
+        self.insertPlainText(source.text())
