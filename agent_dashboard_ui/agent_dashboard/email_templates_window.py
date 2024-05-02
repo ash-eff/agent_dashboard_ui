@@ -170,9 +170,10 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         template_text = template_text.format(**values)
         settings = self.user_settings.get_settings()
+        agent_name = settings['username']
         signature_text = settings['user_signature']
 
-        self.template_output.setPlainText(template_text + signature_text)
+        self.template_output.setPlainText(template_text + agent_name + '\n' + signature_text)
 
     def copy_template(self):
         if self.template_output.toPlainText() == '':
