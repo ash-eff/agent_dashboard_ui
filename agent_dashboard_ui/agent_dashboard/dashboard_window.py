@@ -1,4 +1,5 @@
 import json
+import os
 from PyQt5.QtCore import QUrl, QSize, Qt
 from PyQt5.QtGui import QDesktopServices
 
@@ -26,12 +27,13 @@ from link_window import LinkWindow
 from user_settings_window import SettingsWindow
 
 from helper_classes import UIComponents as uic
+from config import data_dir
 
 class DashboardWindow(QWidget):
     def __init__(self, main, user_settings, parent=None):
         super().__init__(parent)
         self.user_settings = user_settings
-        self.links_file = main.resource_path('data/links.json')
+        self.links_file = os.path.join(data_dir, 'links.json')
         self.main = main
         self.initUI()
         self.hide()

@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtWidgets import (
     QWidget, 
     QVBoxLayout, 
@@ -11,6 +13,8 @@ from email_template_tool import EmailTemplateBuilderTool
 from district_finder_tool import DistrictFinderTool
 from user_info_format_tool import UserInfoFormatTool
 
+from config import data_dir
+
 class ToolsWindow(QWidget):
     def __init__(self, main, user_setting, parent=None):
         super().__init__(parent)
@@ -19,7 +23,7 @@ class ToolsWindow(QWidget):
         self.district_tool = DistrictFinderTool(self)
         self.user_info_tool = UserInfoFormatTool(self)
         self.main = main
-        self.domains_file = main.resource_path('data/domains.json')
+        self.domains_file = os.path.join(data_dir, 'data/domains.json')
         self.btn_x_size = 250
         self.btn_y_size = 75
         self.currently_selected_button = None

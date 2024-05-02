@@ -1,4 +1,5 @@
 import json
+import os
 
 from PyQt5.QtWidgets import (
     QWidget, 
@@ -18,12 +19,13 @@ from PyQt5.QtWidgets import (
 )
 
 from helper_classes import ButtonSelectionMixin
+from config import data_dir
 
 class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
     def __init__(self, main, user_setting, parent=None):
         super().__init__(parent)
         self.user_settings = user_setting
-        self.email_templates_file = main.resource_path('data/email_templates.json')
+        self.email_templates_file = os.path.join(data_dir, 'email_templates.json')
         self.main = main
         self.btn_x_size = 250
         self.btn_y_size = 75

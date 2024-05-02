@@ -16,11 +16,12 @@ from PyQt5.QtWidgets import (
 from note import Note
 
 from helper_classes import ButtonSelectionMixin
+from config import data_dir
 
 class CaseNotesWindow(QWidget, ButtonSelectionMixin):
     def __init__(self, main, parent=None):
         super().__init__(parent)
-        self.case_file = main.resource_path('data/notes.json')
+        self.case_file = os.path.join(data_dir, 'notes.json')
         self.main = main
         self.last_note_title = ''
         self.original_note_title = ''

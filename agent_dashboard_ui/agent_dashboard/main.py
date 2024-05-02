@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (
 )
 
 from helper_classes import ButtonSelectionMixin, UserSettings
+from config import data_dir, style_dir
 
 import dashboard_window as dash_w
 import case_notes_window as case_w
@@ -52,7 +53,7 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.dark_mode_stylesheet = None
         self.light_mode_stylesheet = None
         self.load_stylesheets()
-        self.user_settings = UserSettings(self.resource_path('data/user_settings.json'))
+        self.user_settings = UserSettings(os.path.join(data_dir, 'user_settings.json'))
         self.currently_selected_button = None
         self.initUI()
 
@@ -119,8 +120,8 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         self.statusBar().showMessage(message, time)
 
     def load_stylesheets(self):
-        dark_mode_path = self.resource_path('styles\dark_mode.css')
-        light_mode_path = self.resource_path('styles\light_mode.css')
+        dark_mode_path = os.path.join(style_dir, 'dark_mode.css')
+        light_mode_path = os.path.join(style_dir, 'light_mode.css')
         with open(dark_mode_path, 'r') as f:
             self.dark_mode_stylesheet = f.read()
         with open(light_mode_path, 'r') as f:
@@ -142,15 +143,6 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
             QApplication.instance().setStyleSheet(self.dark_mode_stylesheet)
         else:
             QApplication.instance().setStyleSheet(self.light_mode_stylesheet)
-
-    @staticmethod
-    def resource_path(relative_path):
-        if getattr(sys, 'frozen', False):
-            exe_path = os.path.dirname(sys.executable)
-            base_path = os.path.dirname(exe_path)
-        else:
-            base_path = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(base_path, relative_path)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
