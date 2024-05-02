@@ -72,6 +72,7 @@ class DashboardWindow(QWidget):
         self.links.setFocusPolicy(Qt.NoFocus)
         self.settings_button.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size * 2)
         self.add_link_btn.setFixedSize(self.main.btn_x_size + 15, self.main.btn_y_size * 2)
+        self.links.setDragDropMode(QListWidget.InternalMove)
 
         # Set up layouts
         self.main_layout.addLayout(self.upper_layout)
@@ -120,6 +121,14 @@ class DashboardWindow(QWidget):
         self.load_links()
         if self.user_settings.get_setting('username') == '':
             QTimer.singleShot(100, self.show_message_box)
+
+    def hideEvent(self, event):
+        super().hideEvent(event)
+        self.save_links_to_file()
+
+    def closeEvent(self, event):
+        super().closeEvent(event)
+        self.save_links_to_file()
 
     def show_message_box(self):
         confirmation = QMessageBox.question(self, 'Update Settings', 'Please update your settings before using this app for the first time.', QMessageBox.Ok)
@@ -205,3 +214,17 @@ class DashboardWindow(QWidget):
     def apply_user_settings(self):
         self.user_greet_label.setText(f'Welcome to the Agent Dashboard, {self.user_settings.get_setting("username")}')
         self.update_time()
+
+    def save_links_to_file(self):
+        with open(self.links_file, 'r') as file:
+            links = json.load(file)
+        link_names = [self.links.item(i).text() for i in range(self.links.count())]
+        new_json = []
+        for name in link_names:
+            if name != '':
+                for link in links:
+                    if link['link_name'] == name:
+                        new_json.append(link)
+
+        with open(self.links_file, 'w') as file:
+            json.dump(new_json, file, indent=4)
