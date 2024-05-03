@@ -1,6 +1,8 @@
 import json
 import os
 
+from PyQt5.QtCore import Qt
+
 from PyQt5.QtWidgets import (
     QWidget, 
     QVBoxLayout, 
@@ -60,20 +62,23 @@ class PersonalNotesWindow(QWidget, ButtonSelectionMixin):
         self.outer_layout.setStretch(1,3)
 
         # Set up layouts
+        #self.note_btn_layout.addStretch()
+
         self.main_layout.addLayout(self.outer_layout)
-        self.main_layout.addLayout(self.bottom_button_layout)
         self.left_side_group.setLayout(self.left_layout)
         self.right_side_group.setLayout(self.right_layout)
+        self.right_layout.addWidget(self.personal_notes)
+        self.right_layout.addLayout(self.bottom_button_layout)
         self.scroll_widget.setLayout(self.scroll_layout)
         self.scroll_area.setWidget(self.scroll_widget)
         self.setLayout(self.main_layout)
 
         # Add widgets to layouts
-        self.right_layout.addWidget(self.personal_notes)
         self.left_layout.addWidget(self.scroll_area)
-        self.bottom_button_layout.addWidget(self.new_note_btn)
-        self.bottom_button_layout.addWidget(self.save_note_btn)
-        self.bottom_button_layout.addWidget(self.delete_note_btn)
+        self.bottom_button_layout.addStretch()
+        self.bottom_button_layout.addWidget(self.new_note_btn, Qt.AlignRight)
+        self.bottom_button_layout.addWidget(self.save_note_btn, Qt.AlignRight)
+        self.bottom_button_layout.addWidget(self.delete_note_btn, Qt.AlignRight)
         self.outer_layout.addWidget(self.left_side_group)
         self.outer_layout.addWidget(self.right_side_group)
 
@@ -89,8 +94,7 @@ class PersonalNotesWindow(QWidget, ButtonSelectionMixin):
 
     def hideEvent(self, event):
         super().hideEvent(event)
-        if self.last_note_title == '' or self.last_note_title != self.original_note_title:
-            self.save_note()
+        self.save_note()
     
     def clear_layout(self, layout):
         for i in reversed(range(layout.count())):
