@@ -26,6 +26,7 @@ class UserSettings:
                 "user_time_zone": "Eastern Standard Time",
                 "user_signature": "",
                 "dark_mode": False,
+                "hide_case_options": False,
                 "time_zone_options": [
                     "Eastern Standard Time",
                     "Central Standard Time",

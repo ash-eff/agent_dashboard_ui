@@ -31,6 +31,7 @@ class SettingsWindow(QWidget):
         self.signature_label = QLabel('Email Signature:', self)
         self.signature_box = QTextEdit(self)
         self.dark_mode_checkbox = QCheckBox('Dark Mode', self)
+        self.hide_options_checkbox = QCheckBox('Hide Extra Case Options by Default', self)
         self.save_settings_btn = QPushButton('Save Settings', self)
         self.spacer = QWidget()
 
@@ -46,6 +47,7 @@ class SettingsWindow(QWidget):
         self.layout.addWidget(self.time_zone_label)
         self.layout.addWidget(self.user_time_zone)
         self.layout.addWidget(self.dark_mode_checkbox)
+        self.layout.addWidget(self.hide_options_checkbox)
         #self.layout.addWidget(self.spacer)
         self.layout.addWidget(self.signature_label)
         self.layout.addWidget(self.signature_box)
@@ -68,6 +70,7 @@ class SettingsWindow(QWidget):
         self.user_name_field.setText(settings['username'])
         self.signature_box.setText(settings['user_signature'])
         self.dark_mode_checkbox.setChecked(settings['dark_mode'])
+        self.hide_options_checkbox.setChecked(settings['hide_case_options'])
         self.user_name_field.setFocus()
     
     def save_settings(self):
@@ -75,7 +78,8 @@ class SettingsWindow(QWidget):
             'username': self.user_name_field.text(),
             'user_time_zone': self.user_time_zone.currentText(),
             'user_signature': self.signature_box.toPlainText(),
-            'dark_mode': self.dark_mode_checkbox.isChecked()
+            'dark_mode': self.dark_mode_checkbox.isChecked(),
+            'hide_case_options': self.hide_options_checkbox.isChecked()
         }
 
         self.user_settings.save_settings(settings)
