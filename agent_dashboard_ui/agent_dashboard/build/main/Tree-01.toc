@@ -3,7 +3,4 @@
  [],
  'DATA',
  [('data\\domains.json', 'data\\domains.json', 'DATA'),
-  ('data\\email_templates.json', 'data\\email_templates.json', 'DATA'),
-  ('data\\links.json', 'data\\links.json', 'DATA'),
-  ('data\\notes.json', 'data\\notes.json', 'DATA'),
-  ('data\\user_settings.json', 'data\\user_settings.json', 'DATA')])
+  ('data\\email_templates.json', 'data\\email_templates.json', 'DATA')])

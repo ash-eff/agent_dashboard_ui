@@ -26,7 +26,7 @@ imports:
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
- &#8226;   <a href="#contact_window">contact_window</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#dashboard_window">dashboard_window</a>
  &#8226;   <a href="#email_templates_window">email_templates_window</a>
@@ -165,6 +165,7 @@ imports:
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pyi_rth_inspect.py">pyi_rth_inspect.py</a>
  &#8226;   <a href="#pyi_rth_multiprocessing.py">pyi_rth_multiprocessing.py</a>
@@ -321,7 +322,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'org.python'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#copy">copy</a>
+    <a href="#pickle">pickle</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
 
   </div>
@@ -418,10 +419,11 @@ imports:
 imported by:
     <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
- &#8226;   <a href="#contact_window">contact_window</a>
+ &#8226;   <a href="#case_notes_window">case_notes_window</a>
  &#8226;   <a href="#dashboard_window">dashboard_window</a>
  &#8226;   <a href="#district_finder_tool">district_finder_tool</a>
  &#8226;   <a href="#email_template_tool">email_template_tool</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
  &#8226;   <a href="#user_info_format_tool">user_info_format_tool</a>
 
   </div>
@@ -457,7 +459,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#case_notes_window">case_notes_window</a>
- &#8226;   <a href="#contact_window">contact_window</a>
  &#8226;   <a href="#dashboard_window">dashboard_window</a>
  &#8226;   <a href="#district_finder_tool">district_finder_tool</a>
  &#8226;   <a href="#email_template_tool">email_template_tool</a>
@@ -466,6 +467,7 @@ imported by:
  &#8226;   <a href="#link_window">link_window</a>
  &#8226;   <a href="#main">main</a>
  &#8226;   <a href="#main.py">main.py</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
  &#8226;   <a href="#tools_window">tools_window</a>
  &#8226;   <a href="#user_info_format_tool">user_info_format_tool</a>
  &#8226;   <a href="#user_settings_window">user_settings_window</a>
@@ -2729,7 +2731,9 @@ imported by:
   <a target="code" href="///C:/Users/ashsf/Desktop/dev/python/agent_dashboard_ui/agent_dashboard/case_notes_window.py" type="text/plain"><tt>case_notes_window</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+    <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+ &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#helper_classes">helper_classes</a>
  &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#note">note</a>
@@ -3190,18 +3194,24 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="contact_window"></a>
-  <a target="code" href="///C:/Users/ashsf/Desktop/dev/python/agent_dashboard_ui/agent_dashboard/contact_window.py" type="text/plain"><tt>contact_window</tt></a>
+  <a name="config"></a>
+  <a target="code" href="///C:/Users/ashsf/Desktop/dev/python/agent_dashboard_ui/agent_dashboard/config.py" type="text/plain"><tt>config</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
- &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+    <a href="#os">os</a>
+ &#8226;   <a href="#pathlib">pathlib</a>
+ &#8226;   <a href="#shutil">shutil</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#main">main</a>
+    <a href="#case_notes_window">case_notes_window</a>
+ &#8226;   <a href="#dashboard_window">dashboard_window</a>
+ &#8226;   <a href="#email_templates_window">email_templates_window</a>
+ &#8226;   <a href="#main">main</a>
  &#8226;   <a href="#main.py">main.py</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
+ &#8226;   <a href="#tools_window">tools_window</a>
 
   </div>
 
@@ -3280,8 +3290,8 @@ imported by:
   <a target="code" href="///C:/Users/ashsf/AppData/Local/Programs/Python/Python311/Lib/copy.py" type="text/plain"><tt>copy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'org.python'">'org.python'</a>
- &#8226;   <a href="#copyreg">copyreg</a>
+    <a href="#copyreg">copyreg</a>
+ &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -3396,10 +3406,12 @@ imports:
     <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
  &#8226;   <a href="#PyQt5.QtGui">PyQt5.QtGui</a>
  &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#helper_classes">helper_classes</a>
  &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#link_window">link_window</a>
+ &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pytz">pytz</a>
  &#8226;   <a href="#user_settings_window">user_settings_window</a>
 
@@ -4083,8 +4095,10 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#helper_classes">helper_classes</a>
  &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#os">os</a>
 
   </div>
   <div class="import">
@@ -7056,6 +7070,7 @@ imported by:
  &#8226;   <a href="#email_templates_window">email_templates_window</a>
  &#8226;   <a href="#main">main</a>
  &#8226;   <a href="#main.py">main.py</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
 
   </div>
 
@@ -7270,6 +7285,7 @@ imports:
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
+ &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#warnings">warnings</a>
 
@@ -7410,6 +7426,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#imp">imp</a>
+ &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#packaging.tags">packaging.tags</a>
@@ -8009,6 +8026,7 @@ imported by:
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
  &#8226;   <a href="#link_window">link_window</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
 
   </div>
 
@@ -8229,12 +8247,13 @@ imported by:
 imports:
     <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
  &#8226;   <a href="#case_notes_window">case_notes_window</a>
- &#8226;   <a href="#contact_window">contact_window</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#dashboard_window">dashboard_window</a>
  &#8226;   <a href="#email_templates_window">email_templates_window</a>
  &#8226;   <a href="#helper_classes">helper_classes</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#tools_window">tools_window</a>
 
@@ -9154,6 +9173,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#case_notes_window">case_notes_window</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
 
   </div>
 
@@ -9321,7 +9341,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>org</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#pickle">pickle</a>
+    <a href="#copy">copy</a>
 
   </div>
 
@@ -9364,10 +9384,13 @@ imported by:
  &#8226;   <a href="#case_notes_window">case_notes_window</a>
  &#8226;   <a href="#concurrent.futures.process">concurrent.futures.process</a>
  &#8226;   <a href="#concurrent.futures.thread">concurrent.futures.thread</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#dashboard_window">dashboard_window</a>
  &#8226;   <a href="#doctest">doctest</a>
  &#8226;   <a href="#email.utils">email.utils</a>
+ &#8226;   <a href="#email_templates_window">email_templates_window</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#getopt">getopt</a>
@@ -9417,6 +9440,7 @@ imported by:
  &#8226;   <a href="#packaging.markers">packaging.markers</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#pdb">pdb</a>
+ &#8226;   <a href="#personal_notes_window">personal_notes_window</a>
  &#8226;   <a href="#pkg_resources">pkg_resources</a>
  &#8226;   <a href="#pkg_resources._vendor.appdirs">pkg_resources._vendor.appdirs</a>
  &#8226;   <a href="#pkg_resources._vendor.importlib_resources._common">pkg_resources._vendor.importlib_resources._common</a>
@@ -9448,6 +9472,7 @@ imported by:
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#threading">threading</a>
+ &#8226;   <a href="#tools_window">tools_window</a>
  &#8226;   <a href="#unittest.loader">unittest.loader</a>
  &#8226;   <a href="#unittest.main">unittest.main</a>
  &#8226;   <a href="#urllib.request">urllib.request</a>
@@ -9832,7 +9857,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib.metadata">importlib.metadata</a>
+    <a href="#config">config</a>
+ &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
  &#8226;   <a href="#importlib.resources.readers">importlib.resources.readers</a>
@@ -9891,18 +9917,41 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="personal_notes_window"></a>
+  <a target="code" href="///C:/Users/ashsf/Desktop/dev/python/agent_dashboard_ui/agent_dashboard/personal_notes_window.py" type="text/plain"><tt>personal_notes_window</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt5.QtCore">PyQt5.QtCore</a>
+ &#8226;   <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#config">config</a>
+ &#8226;   <a href="#helper_classes">helper_classes</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#note">note</a>
+ &#8226;   <a href="#os">os</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main">main</a>
+ &#8226;   <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="pickle"></a>
   <a target="code" href="///C:/Users/ashsf/AppData/Local/Programs/Python/Python311/Lib/pickle.py" type="text/plain"><tt>pickle</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#_compat_pickle">_compat_pickle</a>
+    <a href="#'org.python'">'org.python'</a>
+ &#8226;   <a href="#_compat_pickle">_compat_pickle</a>
  &#8226;   <a href="#_pickle">_pickle</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#itertools">itertools</a>
- &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#struct">struct</a>
@@ -11982,6 +12031,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#argparse">argparse</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#multiprocessing.util">multiprocessing.util</a>
  &#8226;   <a href="#pkg_resources._vendor.jaraco.context">pkg_resources._vendor.jaraco.context</a>
@@ -12814,8 +12864,10 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#PyQt5.QtWidgets">PyQt5.QtWidgets</a>
+ &#8226;   <a href="#config">config</a>
  &#8226;   <a href="#district_finder_tool">district_finder_tool</a>
  &#8226;   <a href="#email_template_tool">email_template_tool</a>
+ &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#user_info_format_tool">user_info_format_tool</a>
 
   </div>
