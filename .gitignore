@@ -1,3 +1,4 @@
 .venv
 __pycache__/
-notes.json
+crash_report.txt
+crash_report.log
