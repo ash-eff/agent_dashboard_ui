@@ -103,8 +103,8 @@ class AgentDashboard(QMainWindow, ButtonSelectionMixin):
         line.setFrameShadow(QFrame.Sunken)
 
         horizontal_layout.addWidget(self.dashboard_btn)
-        horizontal_layout.addWidget(self.case_notes_bts)
         horizontal_layout.addWidget(self.personal_notes_btn)
+        horizontal_layout.addWidget(self.case_notes_bts)
         horizontal_layout.addWidget(self.email_template_btn)
         horizontal_layout.addWidget(self.tools_btn)
         horizontal_layout.addWidget(self.contact_btn)

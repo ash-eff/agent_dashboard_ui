@@ -56,6 +56,7 @@ class PersonalNotesWindow(QWidget, ButtonSelectionMixin):
         self.delete_note_btn.setObjectName('warning')
         self.delete_note_btn.setFixedSize(self.main.btn_x_size, self.main.btn_y_size)
         self.personal_notes.setPlaceholderText('Personal Notes')
+        self.personal_notes.setObjectName('case_note')
         self.left_side_group.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
 
         self.outer_layout.setStretch(0,1)
