@@ -142,6 +142,9 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
             elif option['type'] == 'input':
                 input_field = QLineEdit()
                 self.options_field.addRow(label, input_field)
+            elif option['type'] == 'text':
+                text_field = QTextEdit()
+                self.options_field.addRow(label, text_field)
         
         self.generate_btn.show()
         self.copy_btn.show()
@@ -163,6 +166,8 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
                 value = value_widget.currentText()
             elif isinstance(value_widget, QLineEdit):
                 value = value_widget.text()
+            elif isinstance(value_widget, QTextEdit):
+                value = value_widget.toPlainText()
 
             if not value:
                 QMessageBox.warning(self, 'Error', 'Please fill out all fields before generating email.')        
@@ -172,9 +177,16 @@ class EmailTemplatesWindow(QWidget, ButtonSelectionMixin):
 
         template_text = template_text.format(**values)
         settings = self.user_settings.get_settings()
+        agent_name = settings['username']
         signature_text = settings['user_signature']
+        
+        if signature_text == '':
+            QMessageBox.question(self, 'No Signature', 'You forgot to set a signature in your settings. You will need to adjust your email before sending it.', QMessageBox.Ok)
 
-        self.template_output.setPlainText(template_text + signature_text)
+        if agent_name == '':
+            QMessageBox.question(self, 'No Name', 'You forgot to set your name in your settings. You will need to adjust your email before sending it.', QMessageBox.Ok)
+
+        self.template_output.setPlainText(template_text + agent_name + signature_text)
 
     def copy_template(self):
         if self.template_output.toPlainText() == '':
