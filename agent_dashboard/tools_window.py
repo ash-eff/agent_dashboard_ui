@@ -23,7 +23,7 @@ class ToolsWindow(QWidget):
         self.district_tool = DistrictFinderTool(self)
         self.user_info_tool = UserInfoFormatTool(self)
         self.main = main
-        self.domains_file = os.path.join(data_dir, 'data/domains.json')
+        self.domains_file = os.path.join(data_dir, 'domains.json')
         self.btn_x_size = 250
         self.btn_y_size = 75
         self.currently_selected_button = None
